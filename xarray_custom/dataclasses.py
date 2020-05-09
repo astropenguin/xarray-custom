@@ -34,8 +34,12 @@ def get_new(cls: type, dims: Dims) -> Callable:
         attrs: Optional[Attrs] = None,
         **coords,
     ) -> DataArray:
-
+        # create custom DataArray without coordinates
         dataarray = DataArray(data, dims=dims, name=name, attrs=attrs)
+
+        # add coordinates if they are defined in the class
+        if not hasattr(cls, "__annotations__"):
+            return dataarray
 
         for name, coordtype in cls.__annotations__.items():
             if name in coords:
