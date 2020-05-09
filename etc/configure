@@ -7,8 +7,6 @@ mkdir -p .vscode
 
 cat << EOS > .vscode/settings.json
 {
-    // Python environment
-    "python.pythonPath": "$PWD/.venv/bin/python3",
     // Formatting by Black
     "editor.formatOnSave": true,
     "python.formatting.provider": "black",
