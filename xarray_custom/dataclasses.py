@@ -1,15 +1,56 @@
 # standard library
+from functools import wraps
+from types import MethodType
 from typing import Any, Optional
 
 
 # dependencies
 import numpy as np
-from xarray import DataArray
+from xarray import DataArray, register_dataarray_accessor
 from .typing import Attrs, Dtype, Name, Shape
 
 
 # constants
 ORDER = "C"
+
+
+# helper functions
+def move_methods_to_accessor(cls: type, accessor_name: str) -> None:
+    """Create a DataArray accessor and move methods in a class to it.
+
+    Args:
+        cls: Custom DataArray class.
+        accessor_name: Name of a custom DataArray accessor.
+
+    Returns:
+        This function returns nothing.
+
+    """
+
+    # empty accessor
+    class Accessor:
+        def __init__(self, accessed):
+            self.accessed = accessed
+
+    # move methods to accessor
+    for name in dir(cls):
+        method = getattr(cls, name)
+
+        if not isinstance(method, MethodType):
+            continue
+
+        if method.__name__.startswith("__"):
+            continue
+
+        @wraps(method)
+        def accessor_method(self, *args, **kwargs):
+            return method(self.accessed, *args, **kwargs)
+
+        setattr(Accessor, name, accessor_method)
+        delattr(cls, name)
+
+    # register accessor with given name
+    register_dataarray_accessor(accessor_name)(Accessor)
 
 
 # special class methods
