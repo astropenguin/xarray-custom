@@ -1,4 +1,4 @@
-__all__ = ["dataarrayclass"]
+__all__ = ["coordtype", "dataarrayclass"]
 
 
 # standard library
@@ -18,12 +18,18 @@ ORDER = "C"
 
 
 # class decorators
-def dataarrayclass(dims: Dims, accessor_name: str, docstring_style: str = "google"):
+def dataarrayclass(
+    dims: Dims,
+    dtype: Optional[Dtype] = None,
+    accessor: Optional[str] = None,
+    docstring_style: str = "google",
+):
     """Class decorator which updates a custom DataArray class.
 
     Args:
-        dims: Dimensions of the custom DataArray.
-        accessor_name: Name of a DataArray accessor.
+        dims: Dimensions of a custom DataArray.
+        dtype: Datatype of a custom DataArray. Default is 64-bit float.
+        accessor: Name of a DataArray accessor.
             Methods in the decorated class are moved into the accessor.
         docstring_style: Style of docstrings of special methods.
             ``'google'`` is only available (``'numpy'`` will be added).
@@ -35,10 +41,14 @@ def dataarrayclass(dims: Dims, accessor_name: str, docstring_style: str = "googl
 
     def decorator(cls: type) -> type:
         # create a custom __new__ method
-        cls.__new__ = get_new(cls, dims)
+        cls.__new__ = get_new(cls, dims, dtype)
 
         # move methods in the class to accessor
-        move_methods_to_accessor(cls, accessor_name)
+        move_methods_to_accessor(cls, accessor)
+
+        # add special class attributes
+        cls.dims = dims
+        cls.dtype = dtype
 
         # add special class methods
         cls.zeros = zeros
@@ -51,13 +61,33 @@ def dataarrayclass(dims: Dims, accessor_name: str, docstring_style: str = "googl
     return decorator
 
 
+def coordtype(dims: Dims, dtype: Optional[Dtype] = None) -> type:
+    """Create a custom DataArray class for the definition of a coordinate.
+
+    Args:
+        dims: Dimensions of a custom DataArray.
+        dtype: Datatype of a custom DataArray. Default is 64-bit float.
+
+    Returns:
+        CoordType:
+
+    """
+
+    @dataarrayclass(dims, dtype)
+    class CoordType:
+        pass
+
+    return CoordType
+
+
 # helper functions
-def get_new(cls: type, dims: Dims) -> Callable:
+def get_new(cls: type, dims: Dims, dtype: Optional[Dtype] = None) -> Callable:
     """Create a custom __new__ method for the class.
 
     Args:
         cls: Custom DataArray class.
-        dims: Dimensions of the custom DataArray.
+        dims: Dimensions of a custom DataArray.
+        dtype: Datatype of a custom DataArray. Default is 64-bit float.
 
     Returns:
         __new__: A method to create a DataArray instance.
@@ -74,17 +104,23 @@ def get_new(cls: type, dims: Dims) -> Callable:
         # create custom DataArray without coordinates
         dataarray = DataArray(data, dims=dims, name=name, attrs=attrs)
 
-        # add coordinates if they are defined in the class
+        if dtype is not None:
+            dataarray = dataarray.astype(dtype)
+
         if not hasattr(cls, "__annotations__"):
             return dataarray
 
+        # add coordinates if they are defined in the class
         for name, coordtype in cls.__annotations__.items():
+            shape = [dataarray.sizes[dim] for dim in coordtype.dims]
+
             if name in coords:
-                dataarray.coords[name] = coordtype(coords[name])
+                dataarray.coords[name] = coordtype.full(shape, coords[name])
                 continue
 
             if hasattr(cls, name):
-                dataarray.coords[name] = coordtype(getattr(cls, name))
+                default = getattr(cls, name)
+                dataarray.coords[name] = coordtype.full(shape, default)
                 continue
 
             raise ValueError(
@@ -97,12 +133,12 @@ def get_new(cls: type, dims: Dims) -> Callable:
     return __new__
 
 
-def move_methods_to_accessor(cls: type, accessor_name: str) -> None:
+def move_methods_to_accessor(cls: type, accessor: Optional[str] = None) -> None:
     """Create a DataArray accessor and move methods in a class to it.
 
     Args:
         cls: Custom DataArray class.
-        accessor_name: Name of a custom DataArray accessor.
+        accessor: Name of a custom DataArray accessor.
 
     Returns:
         This function returns nothing.
@@ -136,7 +172,8 @@ def move_methods_to_accessor(cls: type, accessor_name: str) -> None:
         delattr(cls, name)
 
     # register accessor with given name
-    register_dataarray_accessor(accessor_name)(Accessor)
+    if accessor is not None:
+        register_dataarray_accessor(accessor)(Accessor)
 
 
 # special class methods
