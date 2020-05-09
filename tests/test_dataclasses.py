@@ -16,7 +16,7 @@ def test_coordtype():
 
 
 def test_dataarrayclass():
-    dims = ("x", "y")
+    dims = "x", "y"
     dtype = float
     accessor = "custom"
 
@@ -39,3 +39,17 @@ def test_dataarrayclass():
     assert dataarray.dtype == dtype
     assert (dataarray.custom.double() == data * 2).all()
     assert (dataarray.z == default_z).all()
+
+
+def test_dataarrayclass_specials():
+    dims = "x", "y"
+
+    @dataarrayclass(dims)
+    class CustomDataArray:
+        pass
+
+    shape = 2, 2
+
+    assert (CustomDataArray.zeros(shape) == np.zeros(shape)).all()
+    assert (CustomDataArray.ones(shape) == np.ones(shape)).all()
+    assert (CustomDataArray.full(shape, "a") == np.full(shape, "a")).all()
