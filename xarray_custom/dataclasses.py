@@ -37,6 +37,23 @@ def dataarrayclass(
     Returns:
         decorator: Class decorator.
 
+    Examples::
+        @dataarrayclass(('x', 'y'))
+        class CustomDataArray:
+            x: coordtype("x", int)
+            y: coordtype("y", int)
+
+        data = [[0, 1], [2, 3]]
+        dataarray = CustomDataArray(data, x=[0, 1], y=[0, 1])
+        print(dataarray)
+
+        # <xarray.DataArray (x: 2, y: 2)>
+        # array([[0, 1],
+        #        [2, 3]])
+        # Coordinates:
+        # * x        (x) int64 0 1
+        # * y        (y) int64 0 1
+
     """
 
     def decorator(cls: type) -> type:
