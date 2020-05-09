@@ -3,7 +3,7 @@ __all__ = ["dataarrayclass"]
 
 # standard library
 from functools import wraps
-from types import MethodType
+from types import FunctionType
 from typing import Any, Callable, Optional
 
 
@@ -114,21 +114,25 @@ def move_methods_to_accessor(cls: type, accessor_name: str) -> None:
         def __init__(self, accessed):
             self.accessed = accessed
 
+    # accessor method converter
+    def to_accessor_method(func):
+        @wraps(func)
+        def wrapped(self, *args, **kwargs):
+            return func(self.accessed, *args, **kwargs)
+
+        return wrapped
+
     # move methods to accessor
     for name in dir(cls):
-        method = getattr(cls, name)
+        obj = getattr(cls, name)
 
-        if not isinstance(method, MethodType):
+        if not isinstance(obj, FunctionType):
             continue
 
-        if method.__name__.startswith("__"):
+        if obj.__name__.startswith("__"):
             continue
 
-        @wraps(method)
-        def accessor_method(self, *args, **kwargs):
-            return method(self.accessed, *args, **kwargs)
-
-        setattr(Accessor, name, accessor_method)
+        setattr(Accessor, name, to_accessor_method(obj))
         delattr(cls, name)
 
     # register accessor with given name
