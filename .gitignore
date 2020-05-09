@@ -1,6 +1,10 @@
 # Editor settings
 .vscode/
 
+# Sphinx docs
+docs/_build
+docs/_apidoc
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
