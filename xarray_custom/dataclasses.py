@@ -1,13 +1,13 @@
 # standard library
 from functools import wraps
 from types import MethodType
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 
 # dependencies
 import numpy as np
 from xarray import DataArray, register_dataarray_accessor
-from .typing import Attrs, Dtype, Name, Shape
+from .typing import Attrs, Dims, Dtype, Name, Shape
 
 
 # constants
@@ -15,6 +15,47 @@ ORDER = "C"
 
 
 # helper functions
+def get_new(cls: type, dims: Dims) -> Callable:
+    """Create a custom __new__ method for the class.
+
+    Args:
+        cls: Custom DataArray class.
+        dims: Name(s) of the data dimension(s).
+
+    Returns:
+        __new__: A method for initializing an instance.
+
+    """
+
+    def __new__(
+        cls: type,
+        data: Any,
+        name: Optional[Name] = None,
+        attrs: Optional[Attrs] = None,
+        **coords,
+    ) -> DataArray:
+
+        dataarray = DataArray(data, dims=dims, name=name, attrs=attrs)
+
+        for name, coordtype in cls.__annotations__.items():
+            if name in coords:
+                dataarray.coords[name] = coordtype(coords[name])
+                continue
+
+            if hasattr(cls, name):
+                dataarray.coords[name] = coordtype(getattr(cls, name))
+                continue
+
+            raise ValueError(
+                f"No default value for a coordinate {repr(name)}. "
+                "The value must be given as a keyword argument."
+            )
+
+        return dataarray
+
+    return __new__
+
+
 def move_methods_to_accessor(cls: type, accessor_name: str) -> None:
     """Create a DataArray accessor and move methods in a class to it.
 
@@ -62,7 +103,7 @@ def zeros(
     order: str = ORDER,
     name: Optional[Name] = None,
     attrs: Optional[Attrs] = None,
-    **coords
+    **coords,
 ) -> DataArray:
     """Create a custom DataArray filled with zeros.
 
@@ -91,7 +132,7 @@ def ones(
     order: str = ORDER,
     name: Optional[Name] = None,
     attrs: Optional[Attrs] = None,
-    **coords
+    **coords,
 ) -> DataArray:
     """Create a custom DataArray filled with ones.
 
@@ -120,7 +161,7 @@ def empty(
     order: str = ORDER,
     name: Optional[Name] = None,
     attrs: Optional[Attrs] = None,
-    **coords
+    **coords,
 ) -> DataArray:
     """Create a custom DataArray filled with uninitialized values.
 
@@ -150,7 +191,7 @@ def full(
     order: str = ORDER,
     name: Optional[Name] = None,
     attrs: Optional[Attrs] = None,
-    **coords
+    **coords,
 ) -> DataArray:
     """Create a custom DataArray filled with ``fill_value``.
 
