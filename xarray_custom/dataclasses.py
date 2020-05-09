@@ -37,22 +37,55 @@ def dataarrayclass(
     Returns:
         decorator: Class decorator.
 
-    Examples::
-        @dataarrayclass(('x', 'y'))
-        class CustomDataArray:
-            x: coordtype("x", int)
-            y: coordtype("y", int)
+    Examples:
+        Here is an example to create a custom DataArray class::
 
-        data = [[0, 1], [2, 3]]
-        dataarray = CustomDataArray(data, x=[0, 1], y=[0, 1])
-        print(dataarray)
+            @dataarrayclass(('x', 'y'), accessor='custom')
+            class CustomDataArray:
+                x: coordtype('x', int) = 0
+                y: coordtype('y', int) = 1
+                z: coordtype(('x', 'y'), str) = 'spam'
 
-        # <xarray.DataArray (x: 2, y: 2)>
-        # array([[0, 1],
-        #        [2, 3]])
-        # Coordinates:
-        # * x        (x) int64 0 1
-        # * y        (y) int64 0 1
+                def double(self):
+                    return self * 2
+
+        The code style is similar to that of Python's dataclass.
+        A DataArray instance is then created using the class::
+
+            dataarray = CustomDataArray([[0, 1], [2, 3]], x=[2, 2])
+            print(dataarray)
+
+            # <xarray.DataArray (x: 2, y: 2)>
+            # array([[0, 1],
+            #        [2, 3]])
+            # Coordinates:
+            # * x        (x) int64 2 2
+            # * y        (y) int64 1 1
+            #   z        (x, y) <U1 'spam' 'spam' 'spam' 'spam'
+
+        Because ``dims`` and coordinates are pre-defined, it is much
+        easier to create a DataArray with given data and coordinates.
+        Custom methods can be used via an accessor::
+
+            doubled = dataarray.custom.double()
+            print(doubled)
+
+            # <xarray.DataArray (x: 2, y: 2)>
+            # array([[0, 2],
+            #        [4, 6]])
+            # Coordinates:
+            # * x        (x) int64 2 2
+            # * y        (y) int64 1 1
+            #   z        (x, y) <U1 'spam' 'spam' 'spam' 'spam'
+
+        Like NumPy, there are several special class methods
+        to create a DataArray filled with some values::
+
+            shape = 3, 3
+            empty = CustomDataArray.empty(shape, ...)
+            zeros = CustomDataArray.zeros(shape, ...)
+            ones = CustomDataArray.ones(shape, ...)
+            full = CustomDataArray.full(shape, fill_value=5, ...)
 
     """
 
@@ -82,11 +115,11 @@ def coordtype(dims: Dims, dtype: Optional[Dtype] = None) -> type:
     """Create a custom DataArray class for the definition of a coordinate.
 
     Args:
-        dims: Dimensions of a custom DataArray.
-        dtype: Datatype of a custom DataArray. Default is 64-bit float.
+        dims: Dimensions of a coordinate.
+        dtype: Datatype of a coordinate. Default is 64-bit float.
 
     Returns:
-        CoordType:
+        CoordType: Custom DataArray class for a coordinate.
 
     """
 
