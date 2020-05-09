@@ -20,10 +20,10 @@ def get_new(cls: type, dims: Dims) -> Callable:
 
     Args:
         cls: Custom DataArray class.
-        dims: Name(s) of the data dimension(s).
+        dims: Dimensions of the custom DataArray.
 
     Returns:
-        __new__: A method for initializing an instance.
+        __new__: A method to create a DataArray instance.
 
     """
 
