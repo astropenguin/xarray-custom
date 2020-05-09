@@ -1,3 +1,6 @@
+__all__ = ["dataarrayclass"]
+
+
 # standard library
 from functools import wraps
 from types import MethodType
@@ -12,6 +15,40 @@ from .typing import Attrs, Dims, Dtype, Name, Shape
 
 # constants
 ORDER = "C"
+
+
+# class decorators
+def dataarrayclass(dims: Dims, accessor_name: str, docstring_style: str = "google"):
+    """Class decorator which updates a custom DataArray class.
+
+    Args:
+        dims: Dimensions of the custom DataArray.
+        accessor_name: Name of a DataArray accessor.
+            Methods in the decorated class are moved into the accessor.
+        docstring_style: Style of docstrings of special methods.
+            ``'google'`` is only available (``'numpy'`` will be added).
+
+    Returns:
+        decorator: Class decorator.
+
+    """
+
+    def decorator(cls: type) -> type:
+        # create a custom __new__ method
+        cls.__new__ = get_new(cls, dims)
+
+        # move methods in the class to accessor
+        move_methods_to_accessor(cls, accessor_name)
+
+        # add special class methods
+        cls.zeros = zeros
+        cls.ones = ones
+        cls.empty = empty
+        cls.full = full
+
+        return cls
+
+    return decorator
 
 
 # helper functions
