@@ -21,3 +21,24 @@ jobs:
           pip install poetry
           poetry build
           poetry publish --username $USERNAME --password $PASSWORD
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Build docs
+        run: |
+          pip install poetry
+          poetry install
+          poetry run sphinx-apidoc -f -o docs/_apidoc xarray_custom
+          poetry run sphinx-build docs docs/_build
+      - name: Deploy docs
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./docs/_build
+          force_orphan: true
