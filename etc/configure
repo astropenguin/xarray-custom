@@ -1,0 +1,21 @@
+#!/bin/bash
+set -eu
+
+
+# VS Code settings
+mkdir -p .vscode
+
+cat << EOS > .vscode/settings.json
+{
+    // Python environment
+    "python.pythonPath": "$PWD/.venv/bin/python3",
+    // Formatting by Black
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",
+    // Linting by Flake8
+    "python.linting.enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.pylintEnabled": false,
+}
+EOS
