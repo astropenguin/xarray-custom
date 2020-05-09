@@ -17,6 +17,7 @@ Here is an introduction code of what the package provides::
 
     from xarray_custom import coordtype, dataarrayclass
 
+
     @dataarrayclass(('x', 'y'), float, 'custom')
     class CustomDataArray:
         x: coordtype('x', int)
@@ -27,13 +28,16 @@ Here is an introduction code of what the package provides::
             """Custom DataArray method which doubles values."""
             return self * 2
 
+
     dataarray = CustomDataArray([[0, 1], [2, 3]], x=[2, 2], y=[3, 3])
-    doubled = dataarray.custom.doubled()
+    onesarray = CustomDataArray.ones(shape=(3, 3))
+    doubled = dataarray.custom.double()
 
 The key points are:
 
 * Custom DataArray instances with fixed dimensions and coordinates can easily be created.
 * Default values and dtype can be specified via a class decorator and class variable annotations.
+* NumPy-like special factory functions like ``ones()`` are provided as class methods.
 * Custom DataArray methods can be used via a custom accessor.
 
 Contents
