@@ -161,7 +161,6 @@ def move_methods_to_accessor(cls: type, accessor: Optional[str] = None) -> None:
         This function returns nothing.
 
     """
-
     # empty accessor
     class Accessor:
         def __init__(self, accessed):
