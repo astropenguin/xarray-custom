@@ -1,11 +1,12 @@
 [tool.poetry]
 name = "xarray-custom"
-version = "0.1.0"
+version = "0.2.0"
 description = "Data classes for custom xarray constructors"
 authors = ["Akio Taniguchi <taniguchi@a.phys.nagoya-u.ac.jp>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/astropenguin/xarray-custom"
+documentation = "https://astropenguin.github.io/xarray-custom"
 
 [tool.poetry.dependencies]
 python = "^3.6"
@@ -18,6 +19,8 @@ flake8 = "^3.7"
 jupyter = "^1.0"
 jupyterlab = "^2.0"
 pytest = "^5.3"
+sphinx = "^3.0"
+pydata-sphinx-theme = "^0.2"
 
 [build-system]
 requires = ["poetry>=0.12"]
