@@ -28,7 +28,8 @@ def dataarrayclass(
 
     Args:
         dims: Dimensions of a custom DataArray.
-        dtype: Datatype of a custom DataArray. Default is 64-bit float.
+        dtype: Datatype of a custom DataArray. Default is ``None``,
+            which means that an input of any datatype is accepted.
         accessor: Name of a DataArray accessor.
             Methods in the decorated class are moved into the accessor.
         docstring_style: Style of docstrings of special methods.
@@ -116,7 +117,8 @@ def coordtype(dims: Dims, dtype: Optional[Dtype] = None) -> type:
 
     Args:
         dims: Dimensions of a coordinate.
-        dtype: Datatype of a coordinate. Default is 64-bit float.
+        dtype: Datatype of a custom DataArray. Default is ``None``,
+            which means that an input of any datatype is accepted.
 
     Returns:
         CoordType: Custom DataArray class for a coordinate.
@@ -137,7 +139,8 @@ def get_new(cls: type, dims: Dims, dtype: Optional[Dtype] = None) -> Callable:
     Args:
         cls: Custom DataArray class.
         dims: Dimensions of a custom DataArray.
-        dtype: Datatype of a custom DataArray. Default is 64-bit float.
+        dtype: Datatype of a custom DataArray. Default is ``None``,
+            which means that an input of any datatype is accepted.
 
     Returns:
         __new__: A method to create a DataArray instance.
