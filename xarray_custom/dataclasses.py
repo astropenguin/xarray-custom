@@ -23,7 +23,7 @@ def dataarrayclass(
     dtype: Optional[Dtype] = None,
     accessor: Optional[str] = None,
     docstring_style: str = "google",
-):
+) -> Callable:
     """Class decorator which updates a custom DataArray class.
 
     Args:
