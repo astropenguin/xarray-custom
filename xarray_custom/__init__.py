@@ -4,6 +4,7 @@ __author__ = "Akio Taniguchi"
 
 
 # modules
+from . import accessor
 from . import dataclasses
 from . import typing
 

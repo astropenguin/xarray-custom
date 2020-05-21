@@ -62,15 +62,14 @@ __all__ = ["coordtype", "dataarrayclass"]
 
 
 # standard library
-from functools import wraps
-from types import FunctionType
 from typing import Any, Callable, Optional
 
 
 # dependencies
 import numpy as np
-from xarray import DataArray, register_dataarray_accessor
+from xarray import DataArray
 from .typing import Attrs, Dims, Dtype, Name, Shape
+from .accessor import add_methods_to_accessor
 
 
 # constants
@@ -117,7 +116,7 @@ def dataarrayclass(
         cls.__new__ = get_new(cls, dims, dtype)
 
         # move methods in the class to accessor
-        move_methods_to_accessor(cls, accessor)
+        add_methods_to_accessor(cls, accessor)
 
         # add special class attributes
         cls.dims = dims
@@ -206,48 +205,6 @@ def get_new(cls: type, dims: Dims, dtype: Optional[Dtype] = None) -> Callable:
         return dataarray
 
     return __new__
-
-
-def move_methods_to_accessor(cls: type, accessor: Optional[str] = None) -> None:
-    """Create a DataArray accessor and move methods in a class to it.
-
-    Args:
-        cls: Custom DataArray class.
-        accessor: Name of a custom DataArray accessor.
-
-    Returns:
-        This function returns nothing.
-
-    """
-    # empty accessor
-    class Accessor:
-        def __init__(self, accessed):
-            self.accessed = accessed
-
-    # accessor method converter
-    def to_accessor_method(func):
-        @wraps(func)
-        def wrapped(self, *args, **kwargs):
-            return func(self.accessed, *args, **kwargs)
-
-        return wrapped
-
-    # move methods to accessor
-    for name in dir(cls):
-        obj = getattr(cls, name)
-
-        if not isinstance(obj, FunctionType):
-            continue
-
-        if obj.__name__.startswith("__"):
-            continue
-
-        setattr(Accessor, name, to_accessor_method(obj))
-        delattr(cls, name)
-
-    # register accessor with given name
-    if accessor is not None:
-        register_dataarray_accessor(accessor)(Accessor)
 
 
 # special class methods
