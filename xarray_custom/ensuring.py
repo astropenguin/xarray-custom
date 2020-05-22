@@ -17,7 +17,12 @@ DTYPE = "dtype"
 def ensure_dataarrayclass(
     cls: type, strict_dims: bool = False, strict_dtype: bool = False
 ) -> type:
-    """Ensure that a class has valid attributes for ``DataArrayClass``.
+    """Ensure that a class is valid for ``DataArrayClass``.
+
+    This function makes sure that the class has required attributes
+    (``accessor``, ``ctypes``, ``dims``, and ``dtypes``) and is a subclass
+    of ``DataArrayClass``. Options (``strict_*``) check more strictly
+    whether ``dims`` and ``dtype`` are consistent with superclasses.
 
     Args:
         cls: Class to be ensured.
