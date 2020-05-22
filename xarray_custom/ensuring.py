@@ -112,12 +112,10 @@ def ensure_dims(cls: type, strict: bool = True) -> type:
         if not hasattr(sub, DIMS):
             continue
 
-        if strict:
-            if set(cls.dims) != set(sub.dims):
-                raise ValueError("Dims must be a superset of any of superclasses.")
-        else:
-            if set(cls.dims) < set(sub.dims):
-                raise ValueError("Dims must be equivalent to any of superclasses.")
+        if strict and set(cls.dims) != set(sub.dims):
+            raise ValueError("Dims must be a superset of any of superclasses.")
+        elif set(cls.dims) < set(sub.dims):
+            raise ValueError("Dims must be equivalent to any of superclasses.")
 
     return cls
 
