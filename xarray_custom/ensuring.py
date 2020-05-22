@@ -150,7 +150,7 @@ def ensure_dtype(cls: type, strict: bool = True) -> type:
             continue
 
         if strict and cls.dtype != sub.dims:
-            raise ValueError
+            raise ValueError("Dtype must be equivalent to any of superclasses.")
 
     return cls
 
