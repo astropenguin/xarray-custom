@@ -12,7 +12,7 @@ from .typing import Attrs, Dtype, Name, Shape
 
 
 # constants
-ORDER = "C"
+ORDER: str = "C"
 
 
 # main functions
