@@ -127,8 +127,7 @@ def ensure_dtype(cls: type, strict: bool = True) -> type:
         if not hasattr(sub, DTYPE):
             continue
 
-        if strict and cls.dtype != sub.dims:
-            raise ValueError("Dtype must be equivalent to any of superclasses.")
+        if strict and cls.dtype != sub.dtype:
 
     return cls
 
