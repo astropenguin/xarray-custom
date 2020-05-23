@@ -1,3 +1,9 @@
+"""Module for special methods of DataArrayClass.
+
+This module provides a function (``add_special_methods``)
+which adds special methods to DataArrayClass at decoration.
+
+"""
 __all__ = ["add_special_methods"]
 
 
@@ -20,10 +26,10 @@ def add_special_methods(cls: type) -> type:
     """Add special methods to a custom DataArray class.
 
     Args:
-        cls: Custom DataArray class.
+        cls: Custom DataArray class to be added.
 
     Returns:
-        cls: Same as ``cls`` in the arguments.
+        cls: Same object as ``cls`` in the arguments.
 
     """
     cls.__new__ = __new__
@@ -35,7 +41,7 @@ def add_special_methods(cls: type) -> type:
     return cls
 
 
-# special class methods
+# helper functions
 def __new__(
     cls: type,
     data: Any,

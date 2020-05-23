@@ -1,7 +1,7 @@
-"""Module for abstract base class of custom DataArray.
+"""Module for abstract base class (ABC).
 
-This module provides an abstract base class ``DataArrayClass`` to ensure
-that a class decorated by ``dataarrayclass`` is a subclass of it.
+This module provides an abstract base class, ``DataArrayClass``
+to ensure that a class is a subclass of it at decoration.
 
 """
 __all__ = ["DataArrayClass"]

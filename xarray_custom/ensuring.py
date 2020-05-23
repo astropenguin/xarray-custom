@@ -1,3 +1,9 @@
+"""Module for ensuring DataArrayClass.
+
+This module provides a function (``ensure_dataarrayclass``)
+to ensure that a class is valid for DataArrayClass at decoration.
+
+"""
 __all__ = ["ensure_dataarrayclass"]
 
 
