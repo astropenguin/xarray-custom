@@ -1,3 +1,9 @@
+"""Module for accessors of custom DataArray classes.
+
+This module provides a function (``add_methods_to_accessor``)
+to add user-defined methods to an accessor at decoration.
+
+"""
 __all__ = ["add_methods_to_accessor"]
 
 
