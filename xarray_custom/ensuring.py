@@ -2,12 +2,10 @@ __all__ = ["ensure_dataarrayclass"]
 
 
 # dependencies
-from inflection import underscore
 from .abc import DataArrayClass
 
 
 # constants
-ACCESSOR = "accessor"
 CTYPES = "ctypes"
 DIMS = "dims"
 DTYPE = "dtype"
@@ -20,8 +18,8 @@ def ensure_dataarrayclass(
     """Ensure that a class is valid for ``DataArrayClass``.
 
     This function makes sure that the class has required attributes
-    (``accessor``, ``ctypes``, ``dims``, and ``dtypes``) and is a subclass
-    of ``DataArrayClass``. Options (``strict_*``) check more strictly
+    (``ctypes``, ``dims``, and ``dtypes``) and is a subclass of
+    ``DataArrayClass``. Options (``strict_*``) check more strictly
     whether ``dims`` and ``dtype`` are consistent with superclasses.
 
     Args:
@@ -33,7 +31,6 @@ def ensure_dataarrayclass(
         cls: Same object as ``cls`` in the arguments.
 
     """
-    ensure_accessor(cls)
     ensure_ctypes(cls)
     ensure_dims(cls, strict_dims)
     ensure_dtype(cls, strict_dtype)
@@ -43,25 +40,6 @@ def ensure_dataarrayclass(
 
 
 # helper functions
-def ensure_accessor(cls: type) -> type:
-    """Ensure that a class has a valid ``accessor`` attribute.
-
-    If the attribute does not exist in the class,
-    the snake-cased name of the class is set.
-
-    Args:
-        cls: Class to be ensured.
-
-    Returns:
-        cls: Same object as ``cls`` in the arguments.
-
-    """
-    if not hasattr(cls, ACCESSOR):
-        cls.accessor = underscore(cls.__name__)
-
-    return cls
-
-
 def ensure_ctypes(cls: type) -> type:
     """Ensure that a class has a valid ``ctypes`` attribute.
 

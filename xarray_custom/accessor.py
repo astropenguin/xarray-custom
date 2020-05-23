@@ -4,10 +4,11 @@ __all__ = ["add_methods_to_accessor"]
 # standard library
 import re
 from functools import wraps
-from typing import Any
+from typing import Any, Optional
 
 
 # dependencies
+from inflection import underscore
 from xarray import register_dataarray_accessor
 
 
@@ -16,16 +17,19 @@ SPECIAL_METHOD = "^__.+__$"
 
 
 # main functions
-def add_methods_to_accessor(cls: type) -> type:
+def add_methods_to_accessor(cls: type, accessor: Optional[str] = None) -> type:
     """Create a DataArray accessor and add methods in a class to it.
 
     Args:
         cls: Custom DataArray class.
+        accessor: Name of a DataArray accessor.
 
     Returns:
         cls: Same as ``cls`` in the arguments.
 
     """
+    if accessor is None:
+        accessor = underscore(cls.__name__)
 
     class Accessor:
         def __init__(self, _accessed):
