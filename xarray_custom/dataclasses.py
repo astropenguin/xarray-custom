@@ -8,6 +8,7 @@ with fixed dimensions, datatype, and coordinates. Two functions are available:
 
 Examples:
     To create a custom DataArray class to represent images::
+
         @dataarrayclass(accessor='img')
         class Image:
             dims = 'x', 'y'
@@ -20,6 +21,7 @@ Examples:
 
     The code style is similar to that of Python's dataclass.
     A DataArray is then created using the class::
+
         image = Image([[0, 1], [2, 3]], x=[0, 1], y=[0, 1])
         print(image)
 
@@ -33,6 +35,7 @@ Examples:
     Because ``dims``, ``dtype``, and coordinates are pre-defined,
     it is much easier to create a DataArray with given data.
     Custom methods can be used via an accessor::
+
         normalized = image.img.normalize()
         print(normalized)
 
@@ -45,6 +48,7 @@ Examples:
 
     Like NumPy, several special class methods are available
     to create a DataArray filled with some values::
+
         ones = Image.ones((2, 2))
         print(ones)
 
@@ -57,6 +61,7 @@ Examples:
 
     Inheriting a custom DataArray class is possible to
     create a derivative DataArray class::
+
         @dataarrayclass(accessor='wimg')
         class WeightedImage(Image):
             w: ctype(('x', 'y'), float) = 1.0
@@ -127,6 +132,7 @@ def dataarrayclass(
 
     Examples:
         To create a custom DataArray class to represent images::
+
             @dataarrayclass(accessor='img')
             class Image:
                 dims = 'x', 'y'
