@@ -14,7 +14,6 @@ Examples:
             dtype = float
             x: ctype('x', int) = 0
             y: ctype('y', int) = 0
-            w: ctype(('x', 'y'), float) = 1.0
 
             def normalize(self):
                 return self / self.max()
@@ -30,7 +29,6 @@ Examples:
         # Coordinates:
         #   * x        (x) int64 0 1
         #   * y        (y) int64 0 1
-        #     w        (x, y) float64 1.0 1.0 1.0 1.0
 
     Because ``dims``, ``dtype``, and coordinates are pre-defined,
     it is much easier to create a DataArray with given data.
@@ -44,12 +42,27 @@ Examples:
         # Coordinates:
         #   * x        (x) int64 0 1
         #   * y        (y) int64 0 1
-        #     w        (x, y) float64 1.0 1.0 1.0 1.0
 
     Like NumPy, several special class methods are available
     to create a DataArray filled with some values::
         ones = Image.ones((2, 2))
         print(ones)
+
+        # <xarray.DataArray (x: 2, y: 2)>
+        # array([[1., 1.],
+                 [1., 1.]])
+        # Coordinates:
+        #   * x        (x) int64 0 0
+        #   * y        (y) int64 0 0
+
+    Inheriting a custom DataArray class is possible to
+    create a derivative DataArray class::
+        @dataarrayclass(accessor='wimg')
+        class WeightedImage(Image):
+            w: ctype(('x', 'y'), float) = 1.0
+
+        zeros = Weightedimage.zeros((2, 2))
+        print(zeros)
 
         # <xarray.DataArray (x: 2, y: 2)>
         # array([[1., 1.],
