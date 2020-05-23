@@ -100,7 +100,7 @@ def ctype(dims: Dims, dtype: Optional[Dtype] = None) -> type:
         ctype: Custom DataArray class for a coordinate.
 
     """
-    return dataarrayclass(type("ctype", (), dict(dims=dims, dtype=dtype)))
+    return dataarrayclass(type("CType", (), dict(dims=dims, dtype=dtype)))
 
 
 def dataarrayclass(
