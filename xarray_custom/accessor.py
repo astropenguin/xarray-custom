@@ -10,6 +10,7 @@ __all__ = ["add_methods_to_accessor"]
 # standard library
 import re
 from functools import wraps
+from types import FunctionType
 from typing import Any, Optional
 
 
@@ -18,7 +19,7 @@ from xarray import register_dataarray_accessor
 
 
 # constants
-SPECIAL_METHOD = "^__.+__$"
+SPECIAL_NAME = "^__.+__$"
 
 
 # main functions
@@ -47,7 +48,9 @@ def add_methods_to_accessor(cls: type, accessor: Optional[str] = None) -> type:
 
         return accessor_method
 
-    for name, obj in vars(cls).items():
+    for name in dir(cls):
+        obj = getattr(cls, name)
+
         if is_user_defined_method(obj):
             setattr(Accessor, name, convert(obj))
 
@@ -57,10 +60,10 @@ def add_methods_to_accessor(cls: type, accessor: Optional[str] = None) -> type:
 
 def is_user_defined_method(obj: Any) -> bool:
     """Return whether ``obj`` is a user-defined method."""
-    if not callable(obj):
+    if not isinstance(obj, FunctionType):
         return False
 
-    if re.search(SPECIAL_METHOD, obj.__name__):
+    if re.search(SPECIAL_NAME, obj.__name__):
         return False
 
     return True
