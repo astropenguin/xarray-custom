@@ -1,6 +1,6 @@
 """Module for type hints of xarray DataArray.
 
-This module procvides type hints of xarray DataArray
+This module provides type hints of xarray DataArray
 and is intended to be used other modules of the package.
 
 """
