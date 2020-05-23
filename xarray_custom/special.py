@@ -1,7 +1,7 @@
-"""Module for special methods of DataArrayClass.
+"""Module for special methods of custom DataArray classes.
 
 This module provides a function (``add_special_methods``)
-which adds special methods to DataArrayClass at decoration.
+which adds special methods to a class at decoration.
 
 """
 __all__ = ["add_special_methods"]

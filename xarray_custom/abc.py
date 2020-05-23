@@ -1,6 +1,6 @@
 """Module for abstract base class (ABC).
 
-This module provides an abstract base class, ``DataArrayClass``
+This module provides an abstract base class, ``DataArrayClass``,
 to ensure that a class is a subclass of it at decoration.
 
 """
