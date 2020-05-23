@@ -43,6 +43,20 @@ def __new__(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
+    """Create a custom DataArray with ``dims={dims}`` and ``dtype={dtype}``.
+
+    Args:
+        data: Values of the DataArray. Its shape must be consistent with
+            ``dims``. It is casted to ``dtype`` if it is defined as a
+            class attribute (an error is raised if it cannot be casted).
+        name: Name of the DataArray.
+        attrs: Attributes of the DataArray. Default is an empty dict.
+        **coords: Coordinates of the DataArray defined by the class.
+
+    Returns:
+        dataarray: Custom DataArray.
+
+    """
     dataarray = DataArray(data, dims=cls.dims, name=name, attrs=attrs)
 
     if cls.dtype is not None:
@@ -56,8 +70,7 @@ def __new__(
             continue
 
         if hasattr(cls, name):
-            default = getattr(cls, name)
-            dataarray.coords[name] = ctype.full(shape, default)
+            dataarray.coords[name] = ctype.full(shape, getattr(cls, name))
             continue
 
         raise ValueError(
@@ -81,14 +94,15 @@ def zeros(
     """Create a custom DataArray filled with zeros.
 
     Args:
-        shape: Shape of a custom DataArray. The length of it must match
+        shape: Shape of the DataArray. The length of it must match
             that of ``dims`` defined by the class.
-        dtype: Datatype of a custom DataArray. Default is 64-bit float.
+        dtype: Datatype of the DataArray. Default is 64-bit float.
+            It is ignored if ``dtype`` is defined as a class attribute.
         order: Order of data in memory. Either ``'C'`` (row-major; C-style)
             or ``'F'`` (column-major; Fortran-style) is accepted.
-        name: Name of a custom DataArray.
-        attrs: Attributes of a custom DataArray. Default is an empty dict.
-        **coords: Coordinates of a custom DataArray defined by the class.
+        name: Name of the DataArray.
+        attrs: Attributes of the DataArray. Default is an empty dict.
+        **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
         dataarray: Custom DataArray filled with zeros.
@@ -110,14 +124,15 @@ def ones(
     """Create a custom DataArray filled with ones.
 
     Args:
-        shape: Shape of a custom DataArray. The length of it must match
+        shape: Shape of the DataArray. The length of it must match
             that of ``dims`` defined by the class.
-        dtype: Datatype of a custom DataArray. Default is 64-bit float.
+        dtype: Datatype of the DataArray. Default is 64-bit float.
+            It is ignored if ``dtype`` is defined as a class attribute.
         order: Order of data in memory. Either ``'C'`` (row-major; C-style)
             or ``'F'`` (column-major; Fortran-style) is accepted.
-        name: Name of a custom DataArray.
-        attrs: Attributes of a custom DataArray. Default is an empty dict.
-        **coords: Coordinates of a custom DataArray defined by the class.
+        name: Name of the DataArray.
+        attrs: Attributes of the DataArray. Default is an empty dict.
+        **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
         dataarray: Custom DataArray filled with ones.
@@ -139,14 +154,15 @@ def empty(
     """Create a custom DataArray filled with uninitialized values.
 
     Args:
-        shape: Shape of a custom DataArray. The length of it must match
+        shape: Shape of the DataArray. The length of it must match
             that of ``dims`` defined by the class.
-        dtype: Datatype of a custom DataArray. Default is 64-bit float.
+        dtype: Datatype of the DataArray. Default is 64-bit float.
+            It is ignored if ``dtype`` is defined as a class attribute.
         order: Order of data in memory. Either ``'C'`` (row-major; C-style)
             or ``'F'`` (column-major; Fortran-style) is accepted.
-        name: Name of a custom DataArray.
-        attrs: Attributes of a custom DataArray. Default is an empty dict.
-        **coords: Coordinates of a custom DataArray defined by the class.
+        name: Name of the DataArray.
+        attrs: Attributes of the DataArray. Default is an empty dict.
+        **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
         dataarray: Custom DataArray filled with uninitialized values.
@@ -169,15 +185,16 @@ def full(
     """Create a custom DataArray filled with ``fill_value``.
 
     Args:
-        shape: Shape of a custom DataArray. The length of it must match
+        shape: Shape of the DataArray. The length of it must match
             that of ``dims`` defined by the class.
         fill_value: Scalar value to fill a custom DataArray.
-        dtype: Datatype of a custom DataArray. Default is 64-bit float.
+        dtype: Datatype of the DataArray. Default follows ``fill_value``.
+            It is ignored if ``dtype`` is defined as a class attribute.
         order: Order of data in memory. Either ``'C'`` (row-major; C-style)
             or ``'F'`` (column-major; Fortran-style) is accepted.
-        name: Name of a custom DataArray.
-        attrs: Attributes of a custom DataArray. Default is an empty dict.
-        **coords: Coordinates of a custom DataArray defined by the class.
+        name: Name of the DataArray.
+        attrs: Attributes of the DataArray. Default is an empty dict.
+        **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
         dataarray: Custom DataArray filled with ``fill_value``.
