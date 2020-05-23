@@ -85,7 +85,7 @@ def ensure_dims(cls: type, strict: bool = True) -> type:
     Raises:
         AttributeError: Raised if ``dims`` does not exist.
         ValueError: Raised if ``dims`` is not a superset of (``strict=False``)
-            or not equivalent to (``True``) any ``dims`` of superclasses.
+            or not equal to (``True``) any ``dims`` of superclasses.
 
     """
     if not hasattr(cls, DIMS):
@@ -98,7 +98,7 @@ def ensure_dims(cls: type, strict: bool = True) -> type:
         if strict and set(cls.dims) != set(sub.dims):
             raise ValueError("Dims must be a superset of any of superclasses.")
         elif set(cls.dims) < set(sub.dims):
-            raise ValueError("Dims must be equivalent to any of superclasses.")
+            raise ValueError("Dims must be equal to any of superclasses.")
 
     return cls
 
@@ -117,7 +117,7 @@ def ensure_dtype(cls: type, strict: bool = True) -> type:
 
     Raises:
         ValueError: Raised if ``strict==True`` and ``dtype``
-            is not equivalent to any of superclasses.
+            is not equal to any of superclasses.
 
     """
     if not hasattr(cls, DTYPE):
@@ -128,6 +128,7 @@ def ensure_dtype(cls: type, strict: bool = True) -> type:
             continue
 
         if strict and cls.dtype != sub.dtype:
+            raise ValueError("Dtype must be equal to any of superclasses.")
 
     return cls
 
