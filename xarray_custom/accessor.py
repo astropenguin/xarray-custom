@@ -8,7 +8,6 @@ from typing import Any, Optional
 
 
 # dependencies
-from inflection import underscore
 from xarray import register_dataarray_accessor
 
 
@@ -29,7 +28,7 @@ def add_methods_to_accessor(cls: type, accessor: Optional[str] = None) -> type:
 
     """
     if accessor is None:
-        accessor = underscore(cls.__name__)
+        return cls
 
     class Accessor:
         def __init__(self, _accessed):
@@ -42,11 +41,11 @@ def add_methods_to_accessor(cls: type, accessor: Optional[str] = None) -> type:
 
         return accessor_method
 
-    for name, obj in cls.__dict__.items():
+    for name, obj in vars(cls).items():
         if is_user_defined_method(obj):
             setattr(Accessor, name, convert(obj))
 
-    register_dataarray_accessor(cls.accessor)(Accessor)
+    register_dataarray_accessor(accessor)(Accessor)
     return cls
 
 
