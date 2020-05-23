@@ -54,7 +54,7 @@ Examples:
 
         # <xarray.DataArray (x: 2, y: 2)>
         # array([[1., 1.],
-                 [1., 1.]])
+        #        [1., 1.]])
         # Coordinates:
         #   * x        (x) int64 0 0
         #   * y        (y) int64 0 0
@@ -71,7 +71,7 @@ Examples:
 
         # <xarray.DataArray (x: 2, y: 2)>
         # array([[1., 1.],
-                 [1., 1.]])
+        #        [1., 1.]])
         # Coordinates:
         #   * x        (x) int64 0 0
         #   * y        (y) int64 0 0
