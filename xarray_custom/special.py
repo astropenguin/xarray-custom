@@ -26,6 +26,7 @@ def add_special_methods(cls: type) -> type:
         cls: Same as ``cls`` in the arguments.
 
     """
+    cls.__new__ = __new__
     cls.zeros = zeros
     cls.ones = ones
     cls.empty = empty
@@ -35,6 +36,38 @@ def add_special_methods(cls: type) -> type:
 
 
 # special class methods
+def __new__(
+    cls: type,
+    data: Any,
+    name: Optional[Name] = None,
+    attrs: Optional[Attrs] = None,
+    **coords,
+) -> DataArray:
+    dataarray = DataArray(data, dims=cls.dims, name=name, attrs=attrs)
+
+    if cls.dtype is not None:
+        dataarray = dataarray.astype(cls.dtype)
+
+    for name, ctype in cls.ctypes.items():
+        shape = [dataarray.sizes[dim] for dim in ctype.dims]
+
+        if name in coords:
+            dataarray.coords[name] = ctype.full(shape, coords[name])
+            continue
+
+        if hasattr(cls, name):
+            default = getattr(cls, name)
+            dataarray.coords[name] = ctype.full(shape, default)
+            continue
+
+        raise ValueError(
+            f"No default value for a coordinate {repr(name)}. "
+            "The value must be given as a keyword argument."
+        )
+
+    return dataarray
+
+
 @classmethod
 def zeros(
     cls: type,
