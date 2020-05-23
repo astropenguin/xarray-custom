@@ -1,55 +1,57 @@
 # dependencies
 import numpy as np
-from xarray_custom import coordtype, dataarrayclass
+from xarray_custom import ctype, dataarrayclass
+
+
+# constants
+DIMS = "x", "y"
+DTYPE = float
+DATA = np.array([[0, 1], [2, 3]], DTYPE)
+
+
+@dataarrayclass(accessor="img")
+class Image:
+    dims = DIMS
+    dtype = DTYPE
+    x: ctype(DIMS[0], int) = 0
+    y: ctype(DIMS[1], int) = 0
+
+    def normalize(self):
+        return self / self.max()
 
 
 # test functions
-def test_coordtype():
-    dims = ("x",)
-    dtype = int
-
-    CoordType = coordtype(dims, dtype)
-    coord = CoordType([1.0, 2.0])
-
-    assert coord.dims == dims
-    assert coord.dtype == dtype
-
-
 def test_dataarrayclass():
-    dims = "x", "y"
-    dtype = float
-    accessor = "custom"
+    data = np.array([[0, 1], [2, 3]], DTYPE)
+    image = Image(data, x=[0, 1], y=[0, 1])
 
-    @dataarrayclass(dims, dtype, accessor)
-    class CustomDataArray:
-        x: coordtype(dims[0], int)
-        y: coordtype(dims[1], int)
-        z: coordtype(dims, str) = "a"
-
-        def double(self):
-            return self * 2
-
-    shape = 2, 2
-    data = np.arange(4).reshape(shape)
-    default_z = np.full(shape, "a")
-
-    dataarray = CustomDataArray(data, x=[0, 1], y=[0, 1])
-
-    assert dataarray.dims == dims
-    assert dataarray.dtype == dtype
-    assert (dataarray.custom.double() == data * 2).all()
-    assert (dataarray.z == default_z).all()
+    assert image.dims == DIMS
+    assert image.dtype == DTYPE
+    assert (image == DATA).all()
 
 
-def test_dataarrayclass_specials():
-    dims = "x", "y"
+def test_custom_methods():
+    data = np.array([[0, 1], [2, 3]], DTYPE)
+    image = Image(data, x=[0, 1], y=[0, 1])
 
-    @dataarrayclass(dims)
-    class CustomDataArray:
-        pass
+    assert (image.img.normalize() == DATA / DATA.max()).all()
 
+
+def test_special_methods():
     shape = 2, 2
 
-    assert (CustomDataArray.zeros(shape) == np.zeros(shape)).all()
-    assert (CustomDataArray.ones(shape) == np.ones(shape)).all()
-    assert (CustomDataArray.full(shape, "a") == np.full(shape, "a")).all()
+    assert (Image.zeros(shape) == np.zeros(shape)).all()
+    assert (Image.ones(shape) == np.ones(shape)).all()
+    assert (Image.full(shape, 1) == np.full(shape, 1)).all()
+
+
+def test_inheritance():
+    @dataarrayclass(accessor="wimg")
+    class WeightedImage(Image):
+        w: ctype(DIMS, float) = 1.0
+
+    image = WeightedImage(DATA)
+    print(vars(WeightedImage))
+
+    assert (image.w == np.ones_like(DATA)).all()
+    assert (image.wimg.normalize() == DATA / DATA.max()).all()
