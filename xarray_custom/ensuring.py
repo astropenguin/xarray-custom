@@ -7,6 +7,9 @@ to ensure that a class is valid for ``DataArrayClass`` at decoration.
 __all__ = ["ensure_dataarrayclass"]
 
 
+# standard library
+import re
+
 # dependencies
 from .abc import DataArrayClass
 
@@ -14,7 +17,6 @@ from .abc import DataArrayClass
 # constants
 CTYPES = "ctypes"
 DIMS = "dims"
-DOC = "doc"
 DTYPE = "dtype"
 
 
@@ -112,10 +114,11 @@ def ensure_dims(cls: type, strict: bool = True) -> type:
 
 
 def ensure_doc(cls: type) -> type:
-    """Ensure that a class has a valid ``doc`` attribute.
+    """Ensure that a class has a valid ``__doc__`` attribute.
 
-    If the attribute does not exist in the class, empty string is set.
-    Line breaks are then replaced with whitespaces.
+    Line breaks and indents in ``__doc__`` are replaced with single
+    whitespaces. Basic information of the class (``dims``, ``dtypes``)
+    is then added at the beginning of ``__doc__``.
 
     Args:
         cls: Class to be ensured.
@@ -124,10 +127,13 @@ def ensure_doc(cls: type) -> type:
         cls: Same object as ``cls`` in the arguments.
 
     """
-    if not hasattr(cls, DOC):
-        cls.doc = ""
+    info = f"[dims={cls.dims!r}, dtype={cls.dtype!r}]"
 
-    cls.doc = cls.doc.replace("\n", " ")
+    if cls.__doc__ is None:
+        cls.__doc__ = f"{info} No description."
+    else:
+        desc = re.sub(r"\n\s*", " ", cls.__doc__)
+        cls.__doc__ = f"{info} {desc}"
 
     return cls
 
