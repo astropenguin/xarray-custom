@@ -33,10 +33,10 @@ def add_special_methods(cls: type) -> type:
 
     """
     cls.__new__ = __new__
-    cls.zeros = zeros
-    cls.ones = ones
-    cls.empty = empty
-    cls.full = full
+    cls.zeros = classmethod(zeros)
+    cls.ones = classmethod(ones)
+    cls.empty = classmethod(empty)
+    cls.full = classmethod(full)
 
     return cls
 
@@ -87,7 +87,6 @@ def __new__(
     return dataarray
 
 
-@classmethod
 def zeros(
     cls: type,
     shape: Shape,
@@ -117,7 +116,6 @@ def zeros(
     return cls(np.zeros(shape, dtype, order), name, attrs, **coords)
 
 
-@classmethod
 def ones(
     cls: type,
     shape: Shape,
@@ -147,7 +145,6 @@ def ones(
     return cls(np.ones(shape, dtype, order), name, attrs, **coords)
 
 
-@classmethod
 def empty(
     cls: type,
     shape: Shape,
@@ -177,7 +174,6 @@ def empty(
     return cls(np.empty(shape, dtype, order), name, attrs, **coords)
 
 
-@classmethod
 def full(
     cls: type,
     shape: Shape,
