@@ -49,7 +49,8 @@ def __new__(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """Create a custom DataArray with ``dims={dims}`` and ``dtype={dtype}``.
+    """\
+    Create a custom DataArray with ``dims={dims}`` and ``dtype={dtype}``.
 
     Args:
         data: Values of the DataArray. Its shape must be consistent with
@@ -96,7 +97,8 @@ def zeros(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """Create a custom DataArray filled with zeros.
+    """\
+    Create a custom DataArray filled with zeros.
 
     Args:
         shape: Shape of the DataArray. The length of it must match
@@ -125,7 +127,8 @@ def ones(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """Create a custom DataArray filled with ones.
+    """\
+    Create a custom DataArray filled with ones.
 
     Args:
         shape: Shape of the DataArray. The length of it must match
@@ -154,7 +157,8 @@ def empty(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """Create a custom DataArray filled with uninitialized values.
+    """\
+    Create a custom DataArray filled with uninitialized values.
 
     Args:
         shape: Shape of the DataArray. The length of it must match
@@ -184,7 +188,8 @@ def full(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """Create a custom DataArray filled with ``fill_value``.
+    """\
+    Create a custom DataArray filled with ``fill_value``.
 
     Args:
         shape: Shape of the DataArray. The length of it must match
