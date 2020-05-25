@@ -16,6 +16,7 @@ from .abc import DataArrayClass
 
 # constants
 CTYPES = "ctypes"
+DESC = "desc"
 DIMS = "dims"
 DTYPE = "dtype"
 
@@ -44,7 +45,7 @@ def ensure_dataarrayclass(
     ensure_dims(cls, strict_dims)
     ensure_dtype(cls, strict_dtype)
     ensure_ctypes(cls)
-    ensure_doc(cls)
+    ensure_desc(cls)
 
     return cls
 
@@ -113,12 +114,12 @@ def ensure_dims(cls: type, strict: bool = True) -> type:
     return cls
 
 
-def ensure_doc(cls: type) -> type:
-    """Ensure that a class has a valid ``__doc__`` attribute.
+def ensure_desc(cls: type) -> type:
+    """Ensure that a class has a valid ``desc`` attribute.
 
-    Line breaks and indents in ``__doc__`` are replaced with single
-    whitespaces. Basic information of the class (``dims``, ``dtypes``)
-    is then added at the beginning of ``__doc__``.
+    If the attribute does not exist in the class,
+    ``__doc__ or 'No description.'`` is set.
+    Line breaks and indents are replaced with whitespaces.
 
     Args:
         cls: Class to be ensured.
@@ -127,13 +128,10 @@ def ensure_doc(cls: type) -> type:
         cls: Same object as ``cls`` in the arguments.
 
     """
-    info = f"[dims={cls.dims!r}, dtype={cls.dtype!r}]"
+    if not hasattr(cls, DESC):
+        cls.desc = cls.__doc__ or "No description."
 
-    if cls.__doc__ is None:
-        cls.__doc__ = f"{info} No description."
-    else:
-        desc = re.sub(r"\n\s*", " ", cls.__doc__)
-        cls.__doc__ = f"{info} {desc}"
+    cls.desc = re.sub(r"\n\s*", " ", cls.desc)
 
     return cls
 
