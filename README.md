@@ -13,7 +13,7 @@ xarray-custom is a third-party Python package which helps to create custom DataA
 Here is an introduction code of what the package provides:
 
 ```python
-from xarray_custom import coordtype, dataarrayclass
+from xarray_custom import ctype, dataarrayclass
 
 @dataarrayclass(accessor='img')
 class Image:
