@@ -93,20 +93,20 @@ from .typing import Dims, Dtype
 
 
 # main functions
-def ctype(dims: Dims, dtype: Optional[Dtype] = None, doc: Optional[str] = None) -> type:
+def ctype(dims: Dims, dtype: Optional[Dtype] = None, desc: str = "") -> type:
     """Create a DataArray class for the definition of a coordinate.
 
     Args:
         dims: Dimensions of the coordinate.
         dtype: Datatype of the coordinate. Default is ``None``,
             which means that an input of any datatype is accepted.
-        doc: Document string to explain the coordinate.
+        desc: Short description of the coordinate.
 
     Returns:
         ctype: DataArray class for the coordinate.
 
     """
-    attrs = dict(dims=dims, dtype=dtype, __doc__=doc)
+    attrs = dict(dims=dims, dtype=dtype, desc=desc)
     return dataarrayclass(type("CType", (object,), attrs))
 
 
