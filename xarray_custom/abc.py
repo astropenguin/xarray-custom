@@ -13,4 +13,6 @@ from abc import ABC
 
 # abstract base class
 class DataArrayClass(ABC):
+    """Abstract base class of a DataArray class."""
+
     pass
