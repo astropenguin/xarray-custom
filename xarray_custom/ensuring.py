@@ -132,7 +132,6 @@ def ensure_desc(cls: type) -> type:
         cls.desc = cls.__doc__ or "No description."
 
     cls.desc = re.sub(r"\n\s*", " ", cls.desc)
-
     return cls
 
 
@@ -177,5 +176,4 @@ def ensure_subclass(cls: type) -> type:
 
     """
     DataArrayClass.register(cls)
-
     return cls
