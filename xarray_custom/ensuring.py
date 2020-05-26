@@ -7,12 +7,16 @@ to ensure that a class is valid for ``DataArrayClass`` at decoration.
 __all__ = ["ensure_dataarrayclass"]
 
 
+# standard library
+import re
+
 # dependencies
 from .abc import DataArrayClass
 
 
 # constants
 CTYPES = "ctypes"
+DESC = "desc"
 DIMS = "dims"
 DTYPE = "dtype"
 
@@ -24,8 +28,8 @@ def ensure_dataarrayclass(
     """Ensure that a class is valid for ``DataArrayClass``.
 
     This function makes sure that the class has required attributes
-    (``ctypes``, ``dims``, and ``dtypes``) and is a subclass of
-    ``DataArrayClass``. Options (``strict_*``) check more strictly
+    (``ctypes``, ``dims``, ``doc``, and ``dtypes``) and is a subclass
+    of ``DataArrayClass``. Options (``strict_*``) check more strictly
     whether ``dims`` and ``dtype`` are consistent with superclasses.
 
     Args:
@@ -37,10 +41,11 @@ def ensure_dataarrayclass(
         cls: Same object as ``cls`` in the arguments.
 
     """
-    ensure_ctypes(cls)
+    ensure_subclass(cls)
     ensure_dims(cls, strict_dims)
     ensure_dtype(cls, strict_dtype)
-    ensure_subclass(cls)
+    ensure_ctypes(cls)
+    ensure_desc(cls)
 
     return cls
 
@@ -109,6 +114,27 @@ def ensure_dims(cls: type, strict: bool = True) -> type:
     return cls
 
 
+def ensure_desc(cls: type) -> type:
+    """Ensure that a class has a valid ``desc`` attribute.
+
+    If the attribute does not exist in the class,
+    ``__doc__ or 'No description.'`` is set.
+    Line breaks and indents are replaced with whitespaces.
+
+    Args:
+        cls: Class to be ensured.
+
+    Returns:
+        cls: Same object as ``cls`` in the arguments.
+
+    """
+    if not hasattr(cls, DESC):
+        cls.desc = cls.__doc__ or "No description."
+
+    cls.desc = re.sub(r"\n\s*", " ", cls.desc)
+    return cls
+
+
 def ensure_dtype(cls: type, strict: bool = True) -> type:
     """Ensure that a class has a valid ``dtype`` attribute.
 
@@ -150,5 +176,4 @@ def ensure_subclass(cls: type) -> type:
 
     """
     DataArrayClass.register(cls)
-
     return cls

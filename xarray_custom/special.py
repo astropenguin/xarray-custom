@@ -14,6 +14,7 @@ from typing import Any, Optional
 # dependencies
 import numpy as np
 from xarray import DataArray
+from .docstring import format_doc
 from .typing import Attrs, Dtype, Name, Shape
 
 
@@ -32,11 +33,13 @@ def add_special_methods(cls: type) -> type:
         cls: Same object as ``cls`` in the arguments.
 
     """
-    cls.__new__ = __new__
-    cls.zeros = zeros
-    cls.ones = ones
-    cls.empty = empty
-    cls.full = full
+    cls.__new__ = format_doc(__new__, cls)
+    cls.__doc__ = cls.__new__.__doc__
+
+    cls.zeros = classmethod(format_doc(zeros, cls))
+    cls.empty = classmethod(format_doc(empty, cls))
+    cls.ones = classmethod(format_doc(ones, cls))
+    cls.full = classmethod(format_doc(full, cls))
 
     return cls
 
@@ -49,7 +52,10 @@ def __new__(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """Create a custom DataArray with ``dims={dims}`` and ``dtype={dtype}``.
+    """\
+    Create a custom DataArray from data and coordinates.
+
+    {summary}
 
     Args:
         data: Values of the DataArray. Its shape must be consistent with
@@ -61,6 +67,15 @@ def __new__(
 
     Returns:
         dataarray: Custom DataArray.
+
+    Keyword Args:
+    {coords_doc}
+
+    See Also:
+        - **zeros:** Create a custom DataArray filled with zeros.
+        - **empty:** Create a custom DataArray filled with uninitialized values.
+        - **ones:** Create a custom DataArray filled with ones.
+        - **full:** Create a custom DataArray filled with ``fill_value``.
 
     """
     dataarray = DataArray(data, dims=cls.dims, name=name, attrs=attrs)
@@ -87,7 +102,6 @@ def __new__(
     return dataarray
 
 
-@classmethod
 def zeros(
     cls: type,
     shape: Shape,
@@ -97,7 +111,10 @@ def zeros(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """Create a custom DataArray filled with zeros.
+    """\
+    Create a custom DataArray filled with zeros.
+
+    {summary}
 
     Args:
         shape: Shape of the DataArray. The length of it must match
@@ -113,11 +130,13 @@ def zeros(
     Returns:
         dataarray: Custom DataArray filled with zeros.
 
+    Keyword Args:
+    {coords_doc}
+
     """
     return cls(np.zeros(shape, dtype, order), name, attrs, **coords)
 
 
-@classmethod
 def ones(
     cls: type,
     shape: Shape,
@@ -127,7 +146,10 @@ def ones(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """Create a custom DataArray filled with ones.
+    """\
+    Create a custom DataArray filled with ones.
+
+    {summary}
 
     Args:
         shape: Shape of the DataArray. The length of it must match
@@ -143,11 +165,13 @@ def ones(
     Returns:
         dataarray: Custom DataArray filled with ones.
 
+    Keyword Args:
+    {coords_doc}
+
     """
     return cls(np.ones(shape, dtype, order), name, attrs, **coords)
 
 
-@classmethod
 def empty(
     cls: type,
     shape: Shape,
@@ -157,7 +181,10 @@ def empty(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """Create a custom DataArray filled with uninitialized values.
+    """\
+    Create a custom DataArray filled with uninitialized values.
+
+    {summary}
 
     Args:
         shape: Shape of the DataArray. The length of it must match
@@ -173,11 +200,13 @@ def empty(
     Returns:
         dataarray: Custom DataArray filled with uninitialized values.
 
+    Keyword Args:
+    {coords_doc}
+
     """
     return cls(np.empty(shape, dtype, order), name, attrs, **coords)
 
 
-@classmethod
 def full(
     cls: type,
     shape: Shape,
@@ -188,7 +217,10 @@ def full(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """Create a custom DataArray filled with ``fill_value``.
+    """\
+    Create a custom DataArray filled with ``fill_value``.
+
+    {summary}
 
     Args:
         shape: Shape of the DataArray. The length of it must match
@@ -204,6 +236,9 @@ def full(
 
     Returns:
         dataarray: Custom DataArray filled with ``fill_value``.
+
+    Keyword Args:
+    {coords_doc}
 
     """
     return cls(np.full(shape, fill_value, dtype, order), name, attrs, **coords)

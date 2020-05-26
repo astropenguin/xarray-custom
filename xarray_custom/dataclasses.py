@@ -3,8 +3,8 @@
 This module provides functions which help to create a custom DataArray class
 with fixed dimensions, datatype, and coordinates. Two functions are available:
 
-- ``dataarrayclass``: Class decorator which updates a custom DataArray class.
-- ``ctype``: Create a custom DataArray class for the definition of a coordinate.
+- ``dataarrayclass``: Class decorator to construct a custom DataArray class.
+- ``ctype``: Create a DataArray class for the definition of a coordinate.
 
 Examples:
     To create a custom DataArray class to represent images::
@@ -54,7 +54,7 @@ Examples:
 
         # <xarray.DataArray (x: 2, y: 2)>
         # array([[1., 1.],
-                 [1., 1.]])
+        #        [1., 1.]])
         # Coordinates:
         #   * x        (x) int64 0 0
         #   * y        (y) int64 0 0
@@ -71,7 +71,7 @@ Examples:
 
         # <xarray.DataArray (x: 2, y: 2)>
         # array([[1., 1.],
-                 [1., 1.]])
+        #        [1., 1.]])
         # Coordinates:
         #   * x        (x) int64 0 0
         #   * y        (y) int64 0 0
@@ -93,19 +93,21 @@ from .typing import Dims, Dtype
 
 
 # main functions
-def ctype(dims: Dims, dtype: Optional[Dtype] = None) -> type:
-    """Create a custom DataArray class for the definition of a coordinate.
+def ctype(dims: Dims, dtype: Optional[Dtype] = None, desc: str = "") -> type:
+    """Create a DataArray class for the definition of a coordinate.
 
     Args:
-        dims: Dimensions of a coordinate.
-        dtype: Datatype of a custom DataArray. Default is ``None``,
+        dims: Dimensions of the coordinate.
+        dtype: Datatype of the coordinate. Default is ``None``,
             which means that an input of any datatype is accepted.
+        desc: Short description of the coordinate.
 
     Returns:
-        ctype: Custom DataArray class for a coordinate.
+        ctype: DataArray class for the coordinate.
 
     """
-    return dataarrayclass(type("CType", (), dict(dims=dims, dtype=dtype)))
+    attrs = dict(dims=dims, dtype=dtype, desc=desc)
+    return dataarrayclass(type("CType", (object,), attrs))
 
 
 def dataarrayclass(
@@ -116,7 +118,7 @@ def dataarrayclass(
     strict_dtype: bool = False,
     docstring_style: str = "google",
 ) -> Union[type, Callable]:
-    """Class decorator which updates a custom DataArray class.
+    """Class decorator to construct a custom DataArray class.
 
     Keyword Args:
         accessor: Name of an accessor for the custom DataArray.
@@ -142,6 +144,7 @@ def dataarrayclass(
 
                 def normalize(self):
                     return self / self.max()
+
     """
 
     def decorator(cls: type) -> type:
