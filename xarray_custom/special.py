@@ -14,6 +14,7 @@ from typing import Any, Optional
 # dependencies
 import numpy as np
 from xarray import DataArray
+from .docstring import format_doc
 from .typing import Attrs, Dtype, Name, Shape
 
 
@@ -32,11 +33,13 @@ def add_special_methods(cls: type) -> type:
         cls: Same object as ``cls`` in the arguments.
 
     """
-    cls.__new__ = __new__
-    cls.zeros = classmethod(zeros)
-    cls.ones = classmethod(ones)
-    cls.empty = classmethod(empty)
-    cls.full = classmethod(full)
+    cls.__new__ = format_doc(__new__, cls)
+    cls.__doc__ = cls.__new__.__doc__
+
+    cls.zeros = classmethod(format_doc(zeros, cls))
+    cls.empty = classmethod(format_doc(empty, cls))
+    cls.ones = classmethod(format_doc(ones, cls))
+    cls.full = classmethod(format_doc(full, cls))
 
     return cls
 
