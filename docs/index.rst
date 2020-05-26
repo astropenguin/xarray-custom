@@ -19,6 +19,8 @@ Here is an introduction code of what the package provides::
 
     @dataarrayclass(accessor='img')
     class Image:
+        """DataArray class to represent images."""
+
         dims = 'x', 'y'
         dtype = float
         x: ctype('x', int) = 0
