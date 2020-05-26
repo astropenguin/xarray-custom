@@ -14,6 +14,7 @@ from typing import Callable
 
 
 # constants
+HALF_INDENT = " " * 2
 INDENT = " " * 4
 WIDTH = 80
 
@@ -89,12 +90,12 @@ def indent_wrap(doc: str, inside_section: bool = True) -> str:
     Args:
         doc: String to be wrapped.
         inside_section: Whether the wrapped ``doc`` is used inside
-            a section (e.g., Args or Returns). If False, backslash
-            is added before a line break to indicate continuation.
+            a section (e.g., Args or Returns). If False (outside),
+            half indent (two whitespaces) is alternatively used.
 
     Returns:
         wrapped: Wrapped string.
 
     """
-    sep = "\n" if inside_section else "\\n"
-    return sep.join(TextWrapper(WIDTH, "", INDENT).wrap(doc))
+    indent = INDENT if inside_section else HALF_INDENT
+    return "\n".join(TextWrapper(WIDTH, "", indent).wrap(doc))
