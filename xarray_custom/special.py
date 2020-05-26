@@ -72,10 +72,10 @@ def __new__(
     {coords_doc}
 
     See Also:
-        * zeros: Create a custom DataArray filled with zeros.
-        * empty: Create a custom DataArray filled with uninitialized values.
-        * ones: Create a custom DataArray filled with ones.
-        * full: Create a custom DataArray filled with ``fill_value``.
+        - **zeros:** Create a custom DataArray filled with zeros.
+        - **empty:** Create a custom DataArray filled with uninitialized values.
+        - **ones:** Create a custom DataArray filled with ones.
+        - **full:** Create a custom DataArray filled with ``fill_value``.
 
     """
     dataarray = DataArray(data, dims=cls.dims, name=name, attrs=attrs)

@@ -57,10 +57,10 @@ def create_summary(cls: type) -> str:
     coords = [f"``{name}``" for name in cls.ctypes]
 
     docs = [
-        f"* desc: {cls.desc}",
-        f"* dims: ``{cls.dims!r}``",
-        f"* dtype: ``{cls.dtype!r}``",
-        f"* coords: {', '.join(coords)}",
+        f"- **desc:** {cls.desc}",
+        f"- **dims:** ``{cls.dims!r}``",
+        f"- **dtype:** ``{cls.dtype!r}``",
+        f"- **coords:** {', '.join(coords)}",
     ]
 
     return "\n".join(indent_wrap(doc, False) for doc in docs)
