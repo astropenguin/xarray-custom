@@ -93,7 +93,7 @@ from .typing import Dims, Dtype
 
 
 # main functions
-def ctype(dims: Dims, dtype: Optional[Dtype] = None, desc: str = "") -> type:
+def ctype(dims: Dims, dtype: Optional[Dtype] = None, desc: str = "", **_) -> type:
     """Create a DataArray class for the definition of a coordinate.
 
     Args:
