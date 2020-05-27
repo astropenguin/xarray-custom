@@ -67,7 +67,7 @@ def ensure_ctypes(cls: type) -> type:
 
     """
     if not hasattr(cls, CTYPES):
-        cls.ctypes = {}
+        setattr(cls, CTYPES, {})
 
     for sub in reversed(cls.mro()):
         if not hasattr(sub, "__annotations__"):
@@ -129,7 +129,10 @@ def ensure_desc(cls: type) -> type:
 
     """
     if not hasattr(cls, DESC):
-        cls.desc = cls.__doc__ or "No description."
+        setattr(cls, DESC, cls.__doc__)
+
+    if cls.desc is None or not cls.desc:
+        cls.desc = "No description."
 
     cls.desc = re.sub(r"\n\s*", " ", cls.desc)
     return cls
@@ -153,7 +156,7 @@ def ensure_dtype(cls: type, strict: bool = True) -> type:
 
     """
     if not hasattr(cls, DTYPE):
-        cls.dtype = None
+        setattr(cls, DTYPE, None)
 
     for sub in cls.mro():
         if not hasattr(sub, DTYPE):
