@@ -33,8 +33,7 @@ jobs:
         run: |
           pip install poetry
           poetry install
-          poetry run sphinx-apidoc -f -o docs/_apidoc xarray_custom
-          poetry run sphinx-build docs docs/_build
+          poetry run etc/builddocs
       - name: Deploy docs
         uses: peaceiris/actions-gh-pages@v3
         with:
