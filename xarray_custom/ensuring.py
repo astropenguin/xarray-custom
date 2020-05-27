@@ -107,9 +107,9 @@ def ensure_dims(cls: type, strict: bool = True) -> type:
             continue
 
         if strict and set(cls.dims) != set(sub.dims):
-            raise ValueError("Dims must be a superset of any of superclasses.")
-        elif set(cls.dims) < set(sub.dims):
             raise ValueError("Dims must be equal to any of superclasses.")
+        elif set(cls.dims) < set(sub.dims):
+            raise ValueError("Dims must be a superset of any of superclasses.")
 
     return cls
 
