@@ -11,6 +11,8 @@ Examples:
 
         @dataarrayclass(accessor='img')
         class Image:
+            \"\"\"DataArray class to represent images.\"\"\"
+
             dims = 'x', 'y'
             dtype = float
             x: ctype('x', int) = 0
@@ -93,7 +95,7 @@ from .typing import Dims, Dtype
 
 
 # main functions
-def ctype(dims: Dims, dtype: Optional[Dtype] = None, desc: str = "") -> type:
+def ctype(dims: Dims, dtype: Optional[Dtype] = None, desc: str = "", **_) -> type:
     """Create a DataArray class for the definition of a coordinate.
 
     Args:
@@ -123,10 +125,10 @@ def dataarrayclass(
     Keyword Args:
         accessor: Name of an accessor for the custom DataArray.
             User-defined methods in the class are added to the accessor.
-        docstring_style: Style of docstrings of special methods.
-            ``'google'`` is only available (``'numpy'`` will be added).
         strict_dims: Whether ``dims`` is consistent with superclasses.
         strict_dtype: Whether ``dtype`` is consistent with superclasses.
+        docstring_style: Style of docstrings of special methods.
+            ``'google'`` is only available (``'numpy'`` will be added).
 
     Returns:
         decorator: Returned if any keyword-only arguments are given.
@@ -137,6 +139,8 @@ def dataarrayclass(
 
             @dataarrayclass(accessor='img')
             class Image:
+                \"\"\"DataArray class to represent images.\"\"\"
+
                 dims = 'x', 'y'
                 dtype = float
                 x: ctype('x', int) = 0
