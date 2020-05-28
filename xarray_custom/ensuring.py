@@ -102,6 +102,9 @@ def ensure_dims(cls: type, strict: bool = True) -> type:
     if not hasattr(cls, DIMS):
         raise AttributeError(f"Must have {DIMS} attribute.")
 
+    if isinstance(cls.dims, str):
+        cls.dims = (cls.dims,)
+
     for sub in cls.mro():
         if not hasattr(sub, DIMS):
             continue
