@@ -11,11 +11,11 @@ __all__ = ["add_methods_to_accessor"]
 import re
 from functools import wraps
 from types import FunctionType
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 
 # dependencies
-from xarray import register_dataarray_accessor
+from xarray import DataArray, register_dataarray_accessor
 
 
 # constants
@@ -23,39 +23,66 @@ SPECIAL_NAME = "^__.+__$"
 
 
 # main functions
-def add_methods_to_accessor(cls: type, accessor: Optional[str] = None) -> type:
+def add_methods_to_accessor(
+    cls: type, accessor: Optional[str] = None, override: bool = False,
+) -> type:
     """Create a DataArray accessor and add methods in a class to it.
 
     Args:
         cls: Custom DataArray class.
         accessor: Name of a DataArray accessor.
+        override: Whether overriding a DataArray accessor of the same name
+            if it is already registered in DataArray. If False (default),
+            this function tries to add methods to it if the namespace
+            has no conflicts. Otherwise an AttributeError is raised.
 
     Returns:
         cls: Same as ``cls`` in the arguments.
+
+    Raises:
+        AttributeError: Raised if this function fails to add methods
+            due to some conflicts between method names and the
+            namespace of the existing DataArray accessor.
 
     """
     if accessor is None:
         return cls
 
-    class Accessor:
-        def __init__(self, _accessed):
-            self._accessed = _accessed
-
-    def convert(method):
-        @wraps(method)
-        def accessor_method(self, *args, **kwargs):
-            return method(self._accessed, *args, **kwargs)
-
-        return accessor_method
+    if not hasattr(DataArray, accessor) or override:
+        Accessor = create_accessor(accessor)
+    else:
+        Accessor = getattr(DataArray, accessor)
 
     for name in dir(cls):
         obj = getattr(cls, name)
 
         if is_user_defined_method(obj):
-            setattr(Accessor, name, convert(obj))
+            Accessor._add_method(name, obj)
+
+    return cls
+
+
+# helper functions
+def create_accessor(accessor: str) -> type:
+    """Create a new DataArray accessor with special methods."""
+
+    class Accessor:
+        def __init__(self, _accessed: DataArray) -> None:
+            self._accessed = _accessed
+
+        @classmethod
+        def _add_method(cls, name: str, method: Callable) -> None:
+            if hasattr(cls, name):
+                raise AttributeError(f"Method {name!r} already exists.")
+
+            @wraps(method)
+            def accessor_method(self, *args, **kwargs):
+                return method(self._accessed, *args, **kwargs)
+
+            setattr(cls, name, accessor_method)
 
     register_dataarray_accessor(accessor)(Accessor)
-    return cls
+    return Accessor
 
 
 def is_user_defined_method(obj: Any) -> bool:
