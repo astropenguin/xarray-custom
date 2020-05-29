@@ -116,7 +116,7 @@ def dataarrayclass(
     cls: Optional[type] = None,
     *,
     accessor: Optional[str] = None,
-    override: bool = False,
+    override_accessor: bool = False,
     strict_dims: bool = False,
     strict_dtype: bool = False,
     docstring_style: str = "google",
@@ -126,8 +126,8 @@ def dataarrayclass(
     Keyword Args:
         accessor: Name of a DataArray accessor for the custom DataArray.
             User-defined methods in the class are added to the accessor.
-        override: Whether overriding a DataArray accessor of the same name
-            if it is already registered in DataArray. Default is False.
+        override_accessor: Whether overriding a DataArray accessor
+            of the same name if it is already registered in DataArray.
         strict_dims: Whether ``dims`` is consistent with superclasses.
         strict_dtype: Whether ``dtype`` is consistent with superclasses.
         docstring_style: Style of docstrings of special methods.
@@ -156,7 +156,7 @@ def dataarrayclass(
 
     def decorator(cls: type) -> type:
         ensure_dataarrayclass(cls, strict_dims, strict_dtype)
-        add_methods_to_accessor(cls, accessor, override)
+        add_methods_to_accessor(cls, accessor, override_accessor)
         add_special_methods(cls)
 
         return cls
