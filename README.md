@@ -5,7 +5,7 @@
 [![Test](https://img.shields.io/github/workflow/status/astropenguin/xarray-custom/Test?logo=github&label=Test&style=flat-square)](https://github.com/astropenguin/xarray-custom/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?label=License&style=flat-square)](LICENSE)
 
-:zap: Data classes for custom xarray constructors
+:zap: Data classes for custom xarray creation
 
 ## TL;DR
 
