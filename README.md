@@ -45,5 +45,24 @@ ones = Image.ones((2, 2), x=[0, 1], y=[0, 1])
 - NumPy-like special functions like ``ones()`` are provided as class methods.
 - Custom DataArray methods can be available via a custom accessor.
 
+## Requirements
+
+- **Python:** 3.6, 3.7, or 3.8 (tested by the author)
+- **Dependencies:** See [pyproject.toml](pyproject.toml)
+
+## Installation
+
+```shell
+$ pip install xarray-custom
+```
+
+## License
+
+Copyright (c) 2020 Akio Taniguchi
+
+- xarray-custom is distributed under the MIT License
+- xarray-custom uses an icon of [xarray] distributed under the Apache 2.0 license
+
 <!-- References -->
+[xarray]: https://github.com/pydata/xarray
 [the Python's native dataclass]: https://docs.python.org/3/library/dataclasses.html
