@@ -9,7 +9,7 @@
 
 ## TL;DR
 
-xarray-custom is a third-party Python package which helps to create custom DataArray classes in the same manner as [the Python's native dataclass](https://docs.python.org/3/library/dataclasses.html).
+xarray-custom is a third-party Python package which helps to create custom DataArray classes in the same manner as [the Python's native dataclass].
 Here is an introduction code of what the package provides:
 
 ```python
@@ -26,7 +26,11 @@ class Image:
 
     def normalize(self):
         return self / self.max()
+```
 
+The key features are:
+
+```python
 # create a custom DataArray
 image = Image([[0, 1], [2, 3]], x=[0, 1], y=[0, 1])
 
@@ -37,8 +41,9 @@ normalized = image.img.normalize()
 ones = Image.ones((2, 2), x=[0, 1], y=[0, 1])
 ```
 
-The key points are:
-
 - Custom DataArray instances with fixed dimensions, datatype, and coordinates can easily be created.
 - NumPy-like special functions like ``ones()`` are provided as class methods.
 - Custom DataArray methods can be available via a custom accessor.
+
+<!-- References -->
+[the Python's native dataclass]: https://docs.python.org/3/library/dataclasses.html

@@ -29,6 +29,8 @@ Here is an introduction code of what the package provides::
         def normalize(self):
             return self / self.max()
 
+The key features are::
+
     # create a custom DataArray
     image = Image([[0, 1], [2, 3]], x=[0, 1], y=[0, 1])
 
@@ -37,8 +39,6 @@ Here is an introduction code of what the package provides::
 
     # create a custom DataArray filled with ones
     ones = Image.ones((2, 2), x=[0, 1], y=[0, 1])
-
-The key points are:
 
 * Custom DataArray instances with fixed dimensions, datatype, and coordinates can easily be created.
 * NumPy-like special functions like ``ones()`` are provided as class methods.
