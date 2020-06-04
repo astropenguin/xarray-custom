@@ -2,7 +2,7 @@ __all__ = ["DataArrayClass"]
 
 
 # standard library
-from typing import Callable
+from typing import Callable, List
 
 
 # dependencies
@@ -44,6 +44,12 @@ class DataArrayClassMeta(type):
             return cls.__class_repr__()
         except AttributeError:
             return super().__repr__()
+
+    def __dir__(cls) -> List[str]:
+        dir_cls = super().__dir__()
+        dir_meta = dir(type(cls))
+
+        return list(set(dir_cls) | set(dir_meta))
 
 
 class DataArrayClass(metaclass=DataArrayClassMeta):
