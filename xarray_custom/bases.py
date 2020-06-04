@@ -40,7 +40,10 @@ class DataArrayClassMeta(type):
         return "No description."
 
     def __repr__(cls) -> str:
-        return cls.__name__
+        try:
+            return cls.__class_repr__()
+        except AttributeError:
+            return super().__repr__()
 
 
 class DataArrayClass(metaclass=DataArrayClassMeta):
