@@ -2,7 +2,8 @@ __all__ = ["DataArrayClass"]
 
 
 # standard library
-from typing import Callable, List
+from typing import Callable, Dict, List, Optional, Union
+from typing import get_type_hints
 
 
 # dependencies
@@ -28,6 +29,22 @@ class DataArrayClassMeta(type):
             return cls.new(*args, **kwargs)
 
         cls.__new__ = __new__
+
+    @property
+    def data(cls) -> Dict[str, Union[Dims, Dtype]]:
+        """Properties of multi-dimensional data."""
+        return dict(dims=cls.dims, dtype=cls.dtype)
+
+    @property
+    def coords(cls) -> Dict[str, "DataArrayClassMeta"]:
+        """Properties of coordinates of data."""
+        coords = {}
+
+        for name, hint in get_type_hints(cls).items():
+            if isinstance(hint, DataArrayClassMeta):
+                coords[name] = hint
+
+        return coords
 
     @property
     def new(cls) -> Callable:
