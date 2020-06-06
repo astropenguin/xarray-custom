@@ -7,8 +7,7 @@ from typing import get_type_hints
 
 
 # dependencies
-from .special import __new__ as new
-from .special import empty, zeros, ones, full
+from .special import empty, zeros, ones, full, new
 from .typing import Attrs, Dims, Dtype, Name
 
 
@@ -23,6 +22,10 @@ class DataArrayClassMeta(type):
     # class attributes for options
     accessor: Optional[str] = None
     desc: str = "No description."
+
+    def __new__(meta, name, bases, attrs) -> "DataArrayClassMeta":
+        attrs["desc"] = attrs.get("__doc__", meta.desc)
+        return super().__new__(meta, name, bases, attrs)
 
     def __init__(cls, name, bases, attrs) -> None:
         def __new__(cls, *args, **kwargs):

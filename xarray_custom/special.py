@@ -16,7 +16,7 @@ ORDER: str = "C"
 
 
 # main functions
-def __new__(
+def new(
     cls: type,
     data: Any,
     name: Optional[Name] = None,
