@@ -8,10 +8,21 @@ from typing import Callable, List
 # dependencies
 from .special import __new__ as new
 from .special import empty, zeros, ones, full
+from .typing import Attrs, Dims, Dtype, Name
 
 
 # main classes
 class DataArrayClassMeta(type):
+    # class attributes for DataArray
+    attrs: Optional[Attrs] = None
+    dims: Optional[Dims] = None
+    dtype: Optional[Dtype] = None
+    name: Optional[Name] = None
+
+    # class attributes for options
+    accessor: Optional[str] = None
+    desc: str = "No description."
+
     def __init__(cls, name, bases, attrs) -> None:
         def __new__(cls, *args, **kwargs):
             return cls.new(*args, **kwargs)
