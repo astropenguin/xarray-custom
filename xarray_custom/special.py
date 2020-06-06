@@ -50,7 +50,7 @@ def new(
 
     """
     if cls.dims is None:
-        raise TypeError
+        raise ValueError("Dimensions are not defined.")
 
     name = name or cls.name
     attrs = attrs or cls.attrs
