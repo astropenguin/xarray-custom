@@ -6,14 +6,22 @@ from typing import Callable, List
 
 
 # dependencies
-from .special import __new__, empty, zeros, ones, full
+from .special import __new__ as new
+from .special import empty, zeros, ones, full
 
 
 # main classes
 class DataArrayClassMeta(type):
-    def __new__(cls, name, bases, attrs):
-        attrs = {**attrs, **dict(__new__=__new__)}
-        return super().__new__(cls, name, bases, attrs)
+    def __init__(cls, name, bases, attrs) -> None:
+        def __new__(cls, *args, **kwargs):
+            return cls.new(*args, **kwargs)
+
+        cls.__new__ = __new__
+
+    @property
+    def new(cls) -> Callable:
+        cls._new = classmethod(new)
+        return cls._new
 
     @property
     def empty(cls) -> Callable:
@@ -37,7 +45,7 @@ class DataArrayClassMeta(type):
 
     @property
     def __doc__(cls) -> str:
-        return "No description."
+        return cls.new.__doc__
 
     def __repr__(cls) -> str:
         try:
