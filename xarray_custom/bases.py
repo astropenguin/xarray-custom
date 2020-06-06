@@ -89,7 +89,15 @@ class DataArrayClassMeta(type):
 
 
 class DataArrayClass(metaclass=DataArrayClassMeta):
-    """No description."""
+    """Base of custom DataArray class."""
 
-    dims = NotImplemented
-    dtype = None
+    @classmethod
+    def __class_repr__(cls):
+        dims = str(cls.dims).replace("'", "")
+
+        try:
+            dtype = cls.dtype.__name__
+        except AttributeError:
+            dtype = cls.dtype
+
+        return f"{cls.__name__}(dims={dims}, dtype={dtype})"
