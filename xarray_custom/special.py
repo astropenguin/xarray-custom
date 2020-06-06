@@ -1,10 +1,4 @@
-"""Module for special methods of custom DataArray classes.
-
-This module provides a function (``add_special_methods``)
-which adds special methods to a class at decoration.
-
-"""
-__all__ = ["add_special_methods"]
+"""Module for special methods of custom DataArray classes."""
 
 
 # standard library
@@ -14,7 +8,6 @@ from typing import Any, Optional
 # dependencies
 import numpy as np
 from xarray import DataArray
-from .docstring import format_doc
 from .typing import Attrs, Dtype, Name, Shape
 
 
@@ -23,28 +16,6 @@ ORDER: str = "C"
 
 
 # main functions
-def add_special_methods(cls: type) -> type:
-    """Add special methods to a custom DataArray class.
-
-    Args:
-        cls: Custom DataArray class to be added.
-
-    Returns:
-        cls: Same object as ``cls`` in the arguments.
-
-    """
-    cls.__new__ = format_doc(__new__, cls)
-    cls.__doc__ = cls.__new__.__doc__
-
-    cls.zeros = classmethod(format_doc(zeros, cls))
-    cls.empty = classmethod(format_doc(empty, cls))
-    cls.ones = classmethod(format_doc(ones, cls))
-    cls.full = classmethod(format_doc(full, cls))
-
-    return cls
-
-
-# helper functions
 def __new__(
     cls: type,
     data: Any,
