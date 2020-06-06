@@ -49,12 +49,17 @@ def new(
         - **full:** Create a custom DataArray filled with ``fill_value``.
 
     """
+    if cls.dims is None:
+        raise TypeError
+
+    name = name or cls.name
+    attrs = attrs or cls.attrs
     dataarray = DataArray(data, dims=cls.dims, name=name, attrs=attrs)
 
     if cls.dtype is not None:
         dataarray = dataarray.astype(cls.dtype)
 
-    for name, ctype in cls.ctypes.items():
+    for name, ctype in cls.coords.items():
         shape = [dataarray.sizes[dim] for dim in ctype.dims]
 
         if name in coords:
@@ -66,8 +71,8 @@ def new(
             continue
 
         raise ValueError(
-            f"No default value for a coordinate {repr(name)}. "
-            "The value must be given as a keyword argument."
+            f"Default value for a coordinate {name} is not defined. "
+            f"This must be given as a keyword argument ({name}=<value>)."
         )
 
     return dataarray
