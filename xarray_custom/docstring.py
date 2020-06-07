@@ -28,6 +28,12 @@ def ensure_desc(cls):
     If it is None, then metaclass ``desc`` is set.
     Line breaks and indents are replaced with whitespaces.
 
+    Args:
+        cls: Custom DataArray class.
+
+    Returns:
+        This function returns nothing.
+
     """
     if cls.desc is None:
         cls.desc = type(cls).desc

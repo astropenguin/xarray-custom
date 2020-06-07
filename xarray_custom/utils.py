@@ -1,6 +1,6 @@
 """Module for utilities which help to create custom DataArray classes.
 
-Currently this module provides only ``include`` class decorator
+Currently this module only provides ``include`` class decorator
 which can include a custom DataArray definition written in a file.
 
 - include: Class decorator to include a custom DataArray definition in a file.
