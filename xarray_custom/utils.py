@@ -23,7 +23,14 @@ from .dataclasses import ctype
 
 
 # constants
-ATTRS = "desc", "dims", "dtype"
+ATTRS = (
+    "accessor",
+    "attrs",
+    "desc",
+    "dims",
+    "dtype",
+    "name",
+)
 COORDS = "coords"
 DEFAULT = "default"
 JSON_RE = r"\.json$"
