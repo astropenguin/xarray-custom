@@ -1,4 +1,18 @@
-"""Module for special methods of custom DataArray classes."""
+"""Module for special methods of custom DataArray classes.
+
+This module has the following methods which are added to
+a DataArray class at its creation. They have two placeholders
+in their docstrings ({summary} and {coords_args}), which are
+automatically filled according to the class attributes.
+
+- new: Create a custom DataArray from data and coordinates.
+- empty: Create a custom DataArray filled with uninitialized values.
+- zeros: Create a custom DataArray filled with zeros.
+- ones: Create a custom DataArray filled with ones.
+- full: Create a custom DataArray filled with ``fill_value``.
+
+"""
+__all__ = ["new", "empty", "zeros", "ones", "full"]
 
 
 # standard library
