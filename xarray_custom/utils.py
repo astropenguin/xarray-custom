@@ -3,6 +3,8 @@
 Currently this module provides only ``include`` class decorator
 which can include a custom DataArray definition written in a file.
 
+- include: Class decorator to include a custom DataArray definition in a file.
+
 """
 __all__ = ["include"]
 
@@ -51,7 +53,7 @@ def include(path: Union[Path, str]) -> Callable:
         path: Path or filename of the file.
 
     Returns:
-        decorator: Decorator to include the definition.
+        Decorator to include the definition.
 
     Examples:
         If a definition is written in ``dataarray.toml``::

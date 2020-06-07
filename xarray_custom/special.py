@@ -1,6 +1,6 @@
 """Module for special methods of custom DataArray classes.
 
-This module has the following methods which are added to
+This module provides the following methods which are added to
 a DataArray class at its creation. They have two placeholders
 in their docstrings ({summary} and {coords_args}), which are
 automatically filled according to the class attributes.
@@ -51,7 +51,7 @@ def new(
         **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
-        DataArray: Custom DataArray.
+        Custom DataArray.
 
     Keyword Args:
     {coords_args}
@@ -117,7 +117,7 @@ def zeros(
         **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
-        DataArray: Custom DataArray filled with zeros.
+        Custom DataArray filled with zeros.
 
     Keyword Args:
     {coords_args}
@@ -151,7 +151,7 @@ def ones(
         **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
-        DataArray: Custom DataArray filled with ones.
+        Custom DataArray filled with ones.
 
     Keyword Args:
     {coords_args}
@@ -185,7 +185,7 @@ def empty(
         **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
-        DataArray: Custom DataArray filled with uninitialized values.
+        Custom DataArray filled with uninitialized values.
 
     Keyword Args:
     {coords_args}
@@ -221,7 +221,7 @@ def full(
         **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
-        DataArray: Custom DataArray filled with ``fill_value``.
+        Custom DataArray filled with ``fill_value``.
 
     Keyword Args:
     {coords_args}
