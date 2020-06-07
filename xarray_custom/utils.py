@@ -18,7 +18,6 @@ from typing import Any, Callable, Dict, Union
 import toml
 import yaml
 from .dataclasses import ctype
-from .ensuring import ensure_ctypes
 
 
 # constants
@@ -96,8 +95,6 @@ def include(path: Union[Path, str]) -> Callable:
     loader = choose_loader_from(path)
 
     def decorator(cls: type) -> type:
-        cls = ensure_ctypes(cls)
-
         config = loader(path)
         coords = config.get(COORDS, {})
 
@@ -106,7 +103,7 @@ def include(path: Union[Path, str]) -> Callable:
                 setattr(cls, name, config[name])
 
         for name, coord in coords.items():
-            cls.ctypes[name] = ctype(**coord)
+            cls.__annotations__[name] = ctype(**coords)
 
             if DEFAULT in coord:
                 setattr(cls, name, coord[DEFAULT])
