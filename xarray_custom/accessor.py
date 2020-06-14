@@ -10,6 +10,7 @@ __all__ = ["register_accessor"]
 
 # standard library
 from functools import wraps
+from itertools import chain
 from types import FunctionType
 from typing import Any, List, Sequence
 
@@ -80,13 +81,8 @@ class DataArrayClasses(list):
                 return getattr(dataarrayclass, name)
 
     def __dir__(self) -> List[str]:
-        """List names of attributes of DataArray classes."""
-        names = set()
-
-        for dataarrayclass in self:
-            names |= set(dir(dataarrayclass))
-
-        return list(names)
+        """List names in a union of DataArray classes' namespaces."""
+        return list(set(chain.from_iterable(map(dir, self))))
 
 
 class AccessorBase:
@@ -125,5 +121,5 @@ class AccessorBase:
         return getattr(self, name)
 
     def __dir__(self) -> List[str]:
-        """List names of attributes of DataArray classes."""
+        """List names in a union of DataArray classes' namespaces."""
         return dir(self._dataarrayclasses)
