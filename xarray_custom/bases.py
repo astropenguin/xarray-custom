@@ -19,17 +19,17 @@ class classproperty(property):
 
 
 class DataArrayClassMeta(type):
-    def __new__(meta, name, bases, attrs):
-        for key, val in attrs.copy().items():
-            if isinstance(val, classmethod):
-                setattr(meta, key, val.__func__)
-                attrs.pop(key)
+    def __new__(meta, name, bases, namespace):
+        for key, obj in namespace.copy().items():
+            if isinstance(obj, classmethod):
+                setattr(meta, key, obj.__func__)
+                namespace.pop(key)
 
-            if isinstance(val, classproperty):
-                setattr(meta, key, val)
-                attrs.pop(key)
+            if isinstance(obj, classproperty):
+                setattr(meta, key, obj)
+                namespace.pop(key)
 
-        return super().__new__(meta, name, bases, attrs)
+        return super().__new__(meta, name, bases, namespace)
 
 
 # main classes
