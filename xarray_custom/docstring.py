@@ -69,11 +69,7 @@ def update_doc(func: Callable, cls: type) -> Callable:
 def create_summary(cls: type) -> List[str]:
     """Create docstrings to summarize a class."""
     dims = str(cls.dims).replace("'", "")
-
-    try:
-        dtype = cls.dtype.__name__
-    except AttributeError:
-        dtype = cls.dtype
+    dtype = str(cls.dtype).replace("'", "")
 
     yield f"desc: {cls.desc}"
     yield f"dims: {dims}"
