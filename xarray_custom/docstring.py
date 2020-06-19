@@ -13,7 +13,7 @@ __all__ = ["ensure_desc", "update_doc"]
 import re
 from functools import wraps
 from textwrap import dedent, TextWrapper
-from typing import Callable, List
+from typing import Callable, Iterator, Sequence
 
 
 # constants
@@ -66,7 +66,7 @@ def update_doc(func: Callable, cls: type) -> Callable:
 
 
 # helper functions
-def create_summary(cls: type) -> List[str]:
+def create_summary(cls: type) -> Iterator[str]:
     """Create docstrings to summarize a class."""
     dims = str(cls.dims).replace("'", "")
     dtype = str(cls.dtype).replace("'", "")
@@ -78,7 +78,7 @@ def create_summary(cls: type) -> List[str]:
     yield f"coords: {', '.join(cls.coords)}"
 
 
-def create_coords_args(cls: type) -> List[str]:
+def create_coords_args(cls: type) -> Iterator[str]:
     """Create docstrings of coordinates of a class."""
     for name, ctype in cls.coords.items():
         dims = str(ctype.dims).replace("'", "")
@@ -87,7 +87,7 @@ def create_coords_args(cls: type) -> List[str]:
         yield f"{name}: (dims={dims}, dtype={dtype}) {ctype.desc}"
 
 
-def wrap(docs: List[str], initial_indent: str, subsequent_indent: str) -> str:
+def wrap(docs: Sequence[str], initial_indent: str, subsequent_indent: str) -> str:
     """Wrap and join docstrings with indents.
 
     Args:
