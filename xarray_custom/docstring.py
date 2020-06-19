@@ -86,11 +86,7 @@ def create_coords_args(cls: type) -> List[str]:
     """Create docstrings of coordinates of a class."""
     for name, ctype in cls.coords.items():
         dims = str(ctype.dims).replace("'", "")
-
-        try:
-            dtype = ctype.dtype.__name__
-        except AttributeError:
-            dtype = ctype.dtype
+        dtype = str(ctype.dtype).replace("'", "")
 
         yield f"{name}: (dims={dims}, dtype={dtype}) {ctype.desc}"
 
