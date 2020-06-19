@@ -3,7 +3,8 @@ __all__ = ["DataArrayClass"]
 
 # standard library
 from functools import wraps
-from typing import Callable, Dict, Optional, Union
+from itertools import chain
+from typing import Callable, Dict, List, Optional, Union
 from typing import get_type_hints
 
 
@@ -30,6 +31,10 @@ class DataArrayClassMeta(type):
                 namespace.pop(key)
 
         return super().__new__(meta, name, bases, namespace)
+
+    def __dir__(cls) -> List[str]:
+        dirs = super().__dir__(), dir(type(cls))
+        return list(set(chain.from_iterable(dirs)))
 
 
 # main classes
