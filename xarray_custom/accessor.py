@@ -18,10 +18,6 @@ from xarray import DataArray, register_dataarray_accessor
 class DataArrayAccessorBase:
     """Base class for DataArray accessor classes."""
 
-    def __init__(self, dataarray: DataArray):
-        """Initialize an instance with a DataArray to be accessed."""
-        self.__dataarray = dataarray
-
     def __init_subclass__(cls, dataarrayclass: Type):
         """Initialize a subclass with a bound DataArray class."""
         cls.__id = uuid4().hex[:16]
@@ -29,6 +25,10 @@ class DataArrayAccessorBase:
         cls.__dataarrayclass = dataarrayclass
 
         register_dataarray_accessor(cls.__name)(cls)
+
+    def __init__(self, dataarray: DataArray):
+        """Initialize an instance with a DataArray to be accessed."""
+        self.__dataarray = dataarray
 
     @lru_cache(None)
     def __bind_function(self, func: Callable) -> Callable:
