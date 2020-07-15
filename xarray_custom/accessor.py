@@ -33,10 +33,12 @@ class DataArrayAccessorBase:
     def __bind_function(self, func: Callable) -> Callable:
         """Bind a function to an instance to use it as a method."""
         first_arg = list(signature(func).parameters)[0]
+
         pattern = rf"(?<!\w){first_arg}\."
         repl = rf"{first_arg}.{self.__name}."
+        source = dedent(getsource(func))
 
-        exec(sub(pattern, repl, dedent(getsource(func))))
+        exec(sub(pattern, repl, source), func.__globals__)
         return locals()[func.__name__].__get__(self.__dataarray)
 
     def __dir__(self) -> List[str]:
