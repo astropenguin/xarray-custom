@@ -2,13 +2,13 @@
 
 
 # standard library
+from functools import lru_cache
 from inspect import getsource, signature
 from re import sub
 from textwrap import dedent
 from types import FunctionType
 from typing import Any, Callable, List, Type
 from uuid import uuid4
-
 
 # dependencies
 from xarray import DataArray, register_dataarray_accessor
@@ -30,6 +30,7 @@ class DataArrayAccessorBase:
 
         register_dataarray_accessor(cls.__name)(cls)
 
+    @lru_cache(None)
     def __bind_function(self, func: Callable) -> Callable:
         """Bind a function to an instance to use it as a method."""
         first_arg = list(signature(func).parameters)[0]
