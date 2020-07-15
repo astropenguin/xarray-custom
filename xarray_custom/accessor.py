@@ -15,19 +15,7 @@ from xarray import DataArray, register_dataarray_accessor
 
 
 # main classes
-class DataArrayAccessorMeta(type):
-    """Create a base class for DataArray accessor classes."""
-
-    def __new__(meta, name, bases, namespace):
-        for key, obj in namespace.copy().items():
-            if isinstance(obj, classmethod):
-                setattr(meta, key, obj.__func__)
-                namespace.pop(key)
-
-        return super().__new__(meta, name, bases, namespace)
-
-
-class DataArrayAccessorBase(metaclass=DataArrayAccessorMeta):
+class DataArrayAccessorBase:
     """Base class for DataArray accessor classes."""
 
     def __init__(self, dataarray: DataArray):
@@ -69,8 +57,3 @@ class DataArrayAccessorBase(metaclass=DataArrayAccessorMeta):
             return self.__bind_function(obj.fget)
 
         return obj
-
-    @classmethod
-    def __repr__(cls) -> str:
-        """Updatable class repr string."""
-        return f"{cls.__name__}(id={cls.__id})"
