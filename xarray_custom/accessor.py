@@ -39,7 +39,7 @@ class DataArrayAccessorBase:
         repl = rf"{first_arg}.{self.__name}."
         source = dedent(getsource(func))
 
-        exec(sub(pattern, repl, source), func.__globals__)
+        exec(sub(pattern, repl, source), func.__globals__, locals())
         return locals()[func.__name__].__get__(self.__dataarray)
 
     def __dir__(self) -> List[str]:
