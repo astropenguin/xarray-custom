@@ -16,12 +16,12 @@ from xarray import DataArray, register_dataarray_accessor
 
     _dataarrayclass: type
 
-    def __init_subclass__(cls):
+    def __init_subclass__(cls) -> None:
         """Initialize a subclass with a bound DataArray class."""
         cls._name = "_accessor_" + uuid4().hex[:16]
         register_dataarray_accessor(cls._name)(cls)
 
-    def __init__(self, dataarray: DataArray):
+    def __init__(self, dataarray: DataArray) -> None:
         """Initialize an instance with a DataArray to be accessed."""
         self._dataarray = dataarray
 
