@@ -37,10 +37,6 @@ from xarray import DataArray, register_dataarray_accessor
         exec(sub(pattern, repl, source), func.__globals__, locals())
         return locals()[func.__name__].__get__(self._dataarray)
 
-    def __dir__(self) -> List[str]:
-        """List names in the namespace of the DataArray class."""
-        return dir(self._dataarrayclass)
-
     def __getattr__(self, name: str) -> Any:
         """Get a bound method or an attribute of the DataArray class."""
         try:
@@ -55,3 +51,7 @@ from xarray import DataArray, register_dataarray_accessor
             return self._bind_function(obj.fget)
 
         return obj
+
+    def __dir__(self) -> List[str]:
+        """List names in the namespace of the DataArray class."""
+        return dir(self._dataarrayclass)
