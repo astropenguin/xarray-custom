@@ -14,6 +14,9 @@ from uuid import uuid4
 from xarray import DataArray, register_dataarray_accessor
 
 
+class UniqueAccessorBase:
+    """Base for DataArrayClass' unique accessor."""
+
     _dataarrayclass: type
 
     def __init_subclass__(cls) -> None:
