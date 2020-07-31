@@ -3,12 +3,14 @@
 
 # standard library
 from functools import lru_cache
+from itertools import chain
 from inspect import getsource, signature
 from re import sub
 from textwrap import dedent
 from types import FunctionType
-from typing import Any, Callable, List, Type
+from typing import Any, Callable, List
 from uuid import uuid4
+
 
 # dependencies
 from xarray import DataArray, register_dataarray_accessor
