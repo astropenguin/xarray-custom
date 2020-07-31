@@ -39,7 +39,7 @@ class UniqueAccessorBase(metaclass=UniqueAccessorMeta):
         self._dataarray = dataarray
 
     @lru_cache(None)
-    def _bind_function(self, func: Callable) -> Callable:
+    def __bind_function(self, func: Callable) -> Callable:
         """Bind a function to an instance to use it as a method."""
         first_arg = list(signature(func).parameters)[0]
 
@@ -58,10 +58,10 @@ class UniqueAccessorBase(metaclass=UniqueAccessorMeta):
             obj = getattr(self._dataarrayclass, name)
 
         if isinstance(obj, FunctionType):
-            return self._bind_function(obj)
+            return self.__bind_function(obj)
 
         if isinstance(obj, property):
-            return self._bind_function(obj.fget)
+            return self.__bind_function(obj.fget)
 
         return obj
 
