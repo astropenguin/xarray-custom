@@ -53,7 +53,7 @@ class CommonAccessorBase(metaclass=CommonAccessorMeta):
         self._dataarray = dataarray
 
     def __getattr__(self, name: str) -> Any:
-        """Get a bound method or an attribute of the DataArray class."""
+        """Get a method or an attribute of the DataArray class."""
         for dataarrayclass in self._dataarrayclasses:
             try:
                 return getattr(dataarrayclass.bind(self._dataarray), name)
@@ -93,7 +93,7 @@ class UniqueAccessorBase(metaclass=UniqueAccessorMeta):
 
     @lru_cache(None)
     def __bind_function(self, func: Callable) -> Callable:
-        """Bind a function to an instance to use it as a method."""
+        """Convert a function to a method of an instance."""
         first_arg = list(signature(func).parameters)[0]
 
         pattern = rf"(?<!\w){first_arg}\."
@@ -104,7 +104,7 @@ class UniqueAccessorBase(metaclass=UniqueAccessorMeta):
         return locals()[func.__name__].__get__(self._dataarray)
 
     def __getattr__(self, name: str) -> Any:
-        """Get a bound method or an attribute of the DataArray class."""
+        """Get a method or an attribute of the DataArray class."""
         try:
             return getattr(self._dataarray, name)
         except AttributeError:
