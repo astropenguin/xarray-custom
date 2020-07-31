@@ -55,10 +55,10 @@ class CommonAccessorBase(metaclass=CommonAccessorMeta):
     def __getattr__(self, name: str) -> Any:
         """Get a method or an attribute of the DataArray class."""
         for dataarrayclass in self._dataarrayclasses:
-            try:
-                return getattr(dataarrayclass.bind(self._dataarray), name)
-            except AttributeError:
-                pass
+            bound = dataarrayclass.bind(self._dataarray)
+
+            if hasattr(bound, name):
+                return getattr(bound, name)
 
         raise AttributeError(f"Any DataArray class has no attribute {name!r}")
 
