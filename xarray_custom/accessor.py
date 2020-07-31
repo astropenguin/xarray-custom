@@ -28,6 +28,9 @@ class CommonAccessorMeta(type):
 
         cls = super().__new__(meta, name, bases, namespace)
 
+        if not _name:
+            return cls
+
         if _name not in meta.__accessors:
             cls._dataarrayclasses = []
             meta.__accessors[_name] = cls
@@ -47,8 +50,8 @@ class CommonAccessorMeta(type):
 class CommonAccessorBase(metaclass=CommonAccessorMeta):
     """Base for DataArrayClass common accessors."""
 
-    _name: str = ""
     _dataarrayclass: type
+    _name: str = ""
 
     def __init__(self, dataarray: DataArray) -> None:
         """Initialize an instance with a DataArray to be accessed."""
@@ -80,8 +83,8 @@ class UniqueAccessorMeta(type):
 class UniqueAccessorBase(metaclass=UniqueAccessorMeta):
     """Base for DataArrayClass unique accessors."""
 
-    _name: str = ""
     _dataarrayclass: type
+    _name: str = ""
 
     def __init_subclass__(cls) -> None:
         """Initialize a subclass with a bound DataArray class."""
