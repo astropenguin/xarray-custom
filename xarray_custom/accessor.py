@@ -15,6 +15,59 @@ from xarray import DataArray, register_dataarray_accessor
 
 
 # helper features
+class CommonAccessorMeta(type):
+    """Metaclass only for the CommonAccessorBase class."""
+
+    __accessors: dict = {}
+
+    def __new__(meta, name: str, bases: tuple, namespace: dict) -> type:
+        _name = namespace.get("_name")
+        _dataarrayclass = namespace.pop("_dataarrayclass", None)
+
+        cls = super().__new__(meta, name, bases, namespace)
+
+        if _name not in meta.__accessors:
+            cls._dataarrayclasses = []
+            meta.__accessors[_name] = cls
+            register_dataarray_accessor(cls._name)(cls)
+
+        cls = meta.__accessors[_name]
+
+        if _dataarrayclass is not None:
+            cls._dataarrayclasses.insert(0, _dataarrayclass)
+
+        return cls
+
+    def __repr__(cls) -> str:
+        return f"Accessor({cls._name!r})"
+
+
+class CommonAccessorBase(metaclass=CommonAccessorMeta):
+    """Base for DataArrayClass common accessors."""
+
+    _name: str = ""
+    _dataarrayclass: type
+
+    def __init__(self, dataarray: DataArray) -> None:
+        """Initialize an instance with a DataArray to be accessed."""
+        self._dataarray = dataarray
+
+    def __getattr__(self, name: str) -> Any:
+        """Get a bound method or an attribute of the DataArray class."""
+        for dataarrayclass in self._dataarrayclasses:
+            try:
+                return getattr(dataarrayclass.bind(self._dataarray), name)
+            except AttributeError:
+                pass
+
+        raise AttributeError(f"Any DataArray class has no attribute {name!r}")
+
+    def __dir__(self) -> List[str]:
+        """List names in the union namespace of DataArray classes."""
+        dirs = map(dir, self._dataarrayclasses)
+        return list(set(chain.from_iterable(dirs)))
+
+
 class UniqueAccessorMeta(type):
     """Metaclass only for the UniqueAccessorBase class."""
 
