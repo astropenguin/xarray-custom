@@ -14,14 +14,24 @@ from uuid import uuid4
 from xarray import DataArray, register_dataarray_accessor
 
 
-class UniqueAccessorBase:
-    """Base for DataArrayClass' unique accessor."""
+# helper features
+class UniqueAccessorMeta(type):
+    """Metaclass only for the UniqueAccessorBase class."""
 
+    def __repr__(cls) -> str:
+        return f"UniqueAccessor({cls._name!r})"
+
+
+class UniqueAccessorBase(metaclass=UniqueAccessorMeta):
+    """Base for DataArrayClass unique accessors."""
+
+    _name: str = ""
     _dataarrayclass: type
 
     def __init_subclass__(cls) -> None:
         """Initialize a subclass with a bound DataArray class."""
         cls._name = "_accessor_" + uuid4().hex[:16]
+        cls._dataarrayclass._accessor = cls
         register_dataarray_accessor(cls._name)(cls)
 
     def __init__(self, dataarray: DataArray) -> None:
