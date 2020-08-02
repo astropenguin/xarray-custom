@@ -9,12 +9,23 @@ from inspect import getsource, signature
 from re import sub
 from textwrap import dedent
 from types import FunctionType
-from typing import Any, Callable, List
+from typing import Any, Callable, List, Optional
 from uuid import uuid4
 
 
 # dependencies
 from xarray import DataArray, register_dataarray_accessor
+
+
+# main features
+def register_accessor(dataarrayclass: type, name: Optional[str] = None) -> None:
+
+    class UniqueAccessor(UniqueAccessorBase):
+        _dataarrayclass = dataarrayclass
+
+    class CommonAccessor(CommonAccessorBase):
+        _dataarrayclass = dataarrayclass
+        _name = name
 
 
 # helper features
