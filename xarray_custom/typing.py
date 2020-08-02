@@ -4,7 +4,7 @@ This module provides type hints of xarray DataArray
 which are intended to be used other modules of the package.
 
 """
-__all__ = ["Attrs", "DataArray", "Dims", "Dtype", "Name", "Shape"]
+__all__ = ["Attrs", "Dims", "Dtype", "Name", "Shape"]
 
 
 # standard library
@@ -15,10 +15,6 @@ from typing import (
     Tuple,
     Union,
 )
-
-
-# dependencies
-from xarray import DataArray
 
 
 # type hints
