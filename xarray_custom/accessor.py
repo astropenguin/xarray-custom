@@ -34,7 +34,7 @@ class CommonAccessorBase:
 
     _dataarrayclasses = defaultdict(list)
     _dataarrayclass: type
-    _name: str = ""
+    _name: str
 
     def __init_subclass__(cls):
         """Initialize a subclass with a bound DataArray class."""
@@ -70,7 +70,7 @@ class UniqueAccessorBase:
     """Base for DataArrayClass unique accessors."""
 
     _dataarrayclass: type
-    _name: str = ""
+    _name: str
 
     def __init_subclass__(cls) -> None:
         """Initialize a subclass with a bound DataArray class."""
