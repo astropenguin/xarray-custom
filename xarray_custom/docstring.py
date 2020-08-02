@@ -1,105 +1,112 @@
-"""Module for formatting docstrings of custom DataArray classes.
-
-This module provides the following functions which are used in
-the metaclass (``DataArrayClassMeta``) of custom DataArray classes.
-
-- ensure_desc: Make sure that a class has a valid ``desc`` attribute.
-- update_doc: Copy a function and update docstring according to a class attributes.
-
-"""
-__all__ = ["ensure_desc", "update_doc"]
+"""Module for making docstrings of functions updatable."""
+__all__ = ["updatable_doc"]
 
 
-import re
+# standard library
 from functools import wraps
-from textwrap import dedent, TextWrapper
-from typing import Callable, Iterator, Sequence
+from textwrap import dedent
+from typing import Callable
 
 
-# constants
-WIDTH = 80
-INDENT = " " * 4
+def updatable_doc(func: Callable) -> Callable:
+    """Decorator for making the docstring of a function updatable.
 
-
-# main functions
-def ensure_desc(cls):
-    """Make sure that a class has a valid ``desc`` attribute.
-
-    If it is None, then metaclass ``desc`` is set.
-    Line breaks and indents are replaced with whitespaces.
+    A decorated function has the ``set`` method, by which an update
+    function for the docstring is registered to the function.
 
     Args:
-        cls: Custom DataArray class.
+        func: A function whose docstring should be updatable.
 
     Returns:
-        This function returns nothing.
+        Decorated function with the ``copy`` and ``set`` methods.
+
+    Methods:
+        copy: Copy the decorated function and return a new one.
+        set: Set an update function to the decorated function.
+
+    Examples::
+
+        @updatable_doc
+        def func():
+            \"\"\"Docstring.\"\"\"
+            pass
+
+        # set an updater function
+        func.set(lambda doc: doc.replace(".", "!"))
+
+        # show the help of the decorated function
+        help(func) # -> Docstring!
 
     """
-    if cls.desc is None:
-        cls.desc = type(cls).desc
-    else:
-        cls.desc = re.sub(r"\n\s*", " ", cls.desc)
-
-
-def update_doc(func: Callable, cls: type) -> Callable:
-    """Copy a function and update docstring according to a class attributes.
-
-    Args:
-        func: Function to be copied and updated.
-        cls: Custom DataArray class whose attributes are used for updating.
-
-    Returns:
-        Copied function whose docstring is updated.
-
-    """
-    formatter = dict(
-        coords_args=wrap(create_coords_args(cls), INDENT, INDENT * 2),
-        summary=wrap(create_summary(cls), "- ", "  "),
-    )
 
     @wraps(func)
-    def copied(*args, **kwargs):
+    def decorated(*args, **kwargs):
         return func(*args, **kwargs)
 
-    copied.__doc__ = dedent(copied.__doc__).format(**formatter)
-    return copied
+    def copy(self):
+        return updatable_doc(self)
+
+    def set(self, updater):
+        self.__doc__.updater = updater
+        return self
+
+    decorated.__doc__ = UpdatableDoc(decorated.__doc__)
+    decorated.copy = copy.__get__(decorated)
+    decorated.set = set.__get__(decorated)
+
+    return decorated
 
 
-# helper functions
-def create_summary(cls: type) -> Iterator[str]:
-    """Create docstrings to summarize a class."""
-    dims = str(cls.dims).replace("'", "")
-    dtype = str(cls.dtype).replace("'", "")
+class UpdatableDoc(str):
+    """Subclass of string for making docstrings updatable.
 
-    yield f"desc: {cls.desc}"
-    yield f"dims: {dims}"
-    yield f"dtype: {dtype}"
-    yield f"accessor: {cls.accessor}"
-    yield f"coords: {', '.join(cls.coords)}"
-
-
-def create_coords_args(cls: type) -> Iterator[str]:
-    """Create docstrings of coordinates of a class."""
-    for name, ctype in cls.coords.items():
-        dims = str(ctype.dims).replace("'", "")
-        dtype = str(ctype.dtype).replace("'", "")
-
-        yield f"{name}: (dims={dims}, dtype={dtype}) {ctype.desc}"
-
-
-def wrap(docs: Sequence[str], initial_indent: str, subsequent_indent: str) -> str:
-    """Wrap and join docstrings with indents.
-
-    Args:
-        docs: Docstrings to be wrapped and joined.
-        initial_indent: String to be prepended to the first line
-            of each wrapped docstring.
-        subsequent_indent: String to be prepended to the second,
-            third, ... lines of each wrapped docstring.
-
-    Returns:
-        Wrapped and joined string.
+    An instance of it can have an update function as an attribute,
+    which is used before running the ``expandtabs``, ``repr``, and ``str``
+    methods. As a result, the output string can be dinamically updated.
 
     """
-    wrapper = TextWrapper(WIDTH, initial_indent, subsequent_indent)
-    return "\n".join("\n".join(wrapper.wrap(doc)) for doc in docs)
+
+    def __new__(cls, doc: str) -> type:
+        """Create an instance from a docstring."""
+        return super().__new__(cls, cls.dedent(doc))
+
+    def __init__(self, doc: str) -> None:
+        """Initialize an instance with a None attribute."""
+        self.updater = None
+
+    def to_str(self):
+        """Convert an instace to a normal string."""
+        return super().__str__()
+
+    @staticmethod
+    def dedent(doc: str) -> str:
+        """Custom dedent function for docstrings."""
+        try:
+            first, others = doc.split("\n", 1)
+        except ValueError:
+            first, others = doc, ""
+
+        return first.lstrip() + "\n" + dedent(others)
+
+    def update(self):
+        """Update a docstring using the updater."""
+        if self.updater is None:
+            return self.to_str()
+        else:
+            return self.updater(self.to_str())
+
+    def expandtabs(self, *args, **kwargs) -> str:
+        """Update a docstring before running expandtabs().
+
+        This is used to update a docstring in the builtin help().
+
+        """
+        return self.update().expandtabs(*args, **kwargs)
+
+    def __str__(self) -> str:
+        """Update a docstring before returning str."""
+        return str(self.update())
+
+    def __repr__(self) -> str:
+        """Update a docstring before returning repr."""
+        return repr(self.update())
