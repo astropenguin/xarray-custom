@@ -1,5 +1,5 @@
 """Module for DataArray accessor classes."""
-__all__ = ["register_accessor"]
+__all__ = ["add_accessors"]
 
 
 # standard library
@@ -19,7 +19,7 @@ from xarray import DataArray, register_dataarray_accessor
 
 
 # main features
-def register_accessor(cls: type, name: Optional[str] = None) -> type:
+def add_accessors(cls: type, name: Optional[str] = None) -> type:
     """Add unique and common accessors to a DataArray class.
 
     Args:
