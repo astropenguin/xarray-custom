@@ -21,6 +21,7 @@ from typing import Any, Callable, Optional
 # dependencies
 import numpy as np
 from xarray import DataArray
+from .docstring import updatable_doc
 from .typing import Attrs, Dtype, Name, Shape
 
 
@@ -51,6 +52,7 @@ def add_classmethods(cls: type, updater: Optional[Callable] = None) -> type:
     return cls
 
 
+@updatable_doc
 def new(
     cls: type,
     data: Any,
@@ -102,6 +104,7 @@ def new(
     return dataarray
 
 
+@updatable_doc
 def zeros(
     cls: type,
     shape: Shape,
@@ -136,6 +139,7 @@ def zeros(
     return cls(np.zeros(shape, dtype, order), name, attrs, **coords)
 
 
+@updatable_doc
 def ones(
     cls: type,
     shape: Shape,
