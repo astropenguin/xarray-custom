@@ -14,9 +14,8 @@ automatically filled according to the class attributes.
 """
 __all__ = ["new", "empty", "zeros", "ones", "full"]
 
-
 # standard library
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 
 # dependencies
@@ -29,7 +28,29 @@ from .typing import Attrs, Dtype, Name, Shape
 ORDER: str = "C"
 
 
-# main functions
+def add_classmethods(cls: type, updater: Optional[Callable] = None) -> type:
+    """Add special class methods to a DataArray class.
+
+    Args:
+        updater: Function to update docstrings of the class methods.
+            Its input must be a docstring (``str``) and its output
+            must be the updated docstring (``str``). If not specified
+            (by default), any docstrings will not be updated.
+
+    Returns:
+        The same DataArray class as the input.
+
+    """
+    cls.__new__ = new.copy().set(updater)
+
+    cls.empty = classmethod(empty.copy().set(updater))
+    cls.zeros = classmethod(zeros.copy().set(updater))
+    cls.ones = classmethod(ones.copy().set(updater))
+    cls.full = classmethod(full.copy().set(updater))
+
+    return cls
+
+
 def new(
     cls: type,
     data: Any,
