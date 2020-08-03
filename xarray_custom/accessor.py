@@ -1,4 +1,5 @@
 """Module for DataArray accessor classes."""
+__all__ = ["register_accessor"]
 
 
 # standard library
@@ -18,19 +19,32 @@ from xarray import DataArray, register_dataarray_accessor
 
 
 # main features
-def register_accessor(dataarrayclass: type, name: Optional[str] = None) -> None:
+def register_accessor(cls: type, name: Optional[str] = None) -> type:
+    """Add unique and common accessors to a DataArray class.
+
+    Args:
+        cls: DataArray class to which accessors are added.
+        name: Name of a common accessor. If not specified,
+            only an unique accessor is added to the class.
+
+    Returns:
+        The same DataArray class as the input.
+
+    """
 
     class UniqueAccessor(UniqueAccessorBase):
-        _dataarrayclass = dataarrayclass
+        _dataarrayclass = cls
 
     class CommonAccessor(CommonAccessorBase):
-        _dataarrayclass = dataarrayclass
+        _dataarrayclass = cls
         _name = name
+
+    return cls
 
 
 # helper features
 class CommonAccessorBase:
-    """Base for DataArrayClass common accessors."""
+    """Base class for common accessors of DataArray classes."""
 
     _dataarrayclasses = defaultdict(list)
     _dataarrayclass: type
@@ -67,7 +81,7 @@ class CommonAccessorBase:
 
 
 class UniqueAccessorBase:
-    """Base for DataArrayClass unique accessors."""
+    """Base class for unique accessors of DataArray classes."""
 
     _dataarrayclass: type
     _name: str
