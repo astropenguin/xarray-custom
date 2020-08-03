@@ -60,10 +60,7 @@ def new(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """\
-    Create a custom DataArray from data and coordinates.
-
-    {summary}
+    """Create a custom DataArray from data and coordinates.
 
     Args:
         data: Values of the DataArray. Its shape must match class ``dims``.
@@ -76,8 +73,7 @@ def new(
     Returns:
         Custom DataArray.
 
-    Keyword Args:
-    {coords_args}
+    {cls.coords.doc}
 
     """
     dataarray = DataArray(data, dims=cls.dims, name=name, attrs=attrs)
@@ -114,10 +110,7 @@ def zeros(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """\
-    Create a custom DataArray filled with zeros.
-
-    {summary}
+    """Create a custom DataArray filled with zeros.
 
     Args:
         shape: Shape of the DataArray. It must match class ``dims``.
@@ -132,8 +125,7 @@ def zeros(
     Returns:
         Custom DataArray filled with zeros.
 
-    Keyword Args:
-    {coords_args}
+    {cls.coords.doc}
 
     """
     return cls(np.zeros(shape, dtype, order), name, attrs, **coords)
@@ -149,10 +141,7 @@ def ones(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """\
-    Create a custom DataArray filled with ones.
-
-    {summary}
+    """Create a custom DataArray filled with ones.
 
     Args:
         shape: Shape of the DataArray. It must match class ``dims``.
@@ -167,13 +156,13 @@ def ones(
     Returns:
         Custom DataArray filled with ones.
 
-    Keyword Args:
-    {coords_args}
+    {cls.coords.doc}
 
     """
     return cls(np.ones(shape, dtype, order), name, attrs, **coords)
 
 
+@updatable_doc
 def empty(
     cls: type,
     shape: Shape,
@@ -183,10 +172,7 @@ def empty(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """\
-    Create a custom DataArray filled with uninitialized values.
-
-    {summary}
+    """Create a custom DataArray filled with uninitialized values.
 
     Args:
         shape: Shape of the DataArray. It must match class ``dims``.
@@ -201,13 +187,13 @@ def empty(
     Returns:
         Custom DataArray filled with uninitialized values.
 
-    Keyword Args:
-    {coords_args}
+    {cls.coords.doc}
 
     """
     return cls(np.empty(shape, dtype, order), name, attrs, **coords)
 
 
+@updatable_doc
 def full(
     cls: type,
     shape: Shape,
@@ -218,10 +204,7 @@ def full(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """\
-    Create a custom DataArray filled with ``fill_value``.
-
-    {summary}
+    """Create a custom DataArray filled with ``fill_value``.
 
     Args:
         shape: Shape of the DataArray. It must match class ``dims``.
@@ -237,8 +220,7 @@ def full(
     Returns:
         Custom DataArray filled with ``fill_value``.
 
-    Keyword Args:
-    {coords_args}
+    {cls.coords.doc}
 
     """
     return cls(np.full(shape, fill_value, dtype, order), name, attrs, **coords)
