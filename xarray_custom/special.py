@@ -77,37 +77,26 @@ def new(
     Keyword Args:
     {coords_args}
 
-    See Also:
-        - empty: Create a custom DataArray filled with uninitialized values.
-        - zeros: Create a custom DataArray filled with zeros.
-        - ones: Create a custom DataArray filled with ones.
-        - full: Create a custom DataArray filled with ``fill_value``.
-
     """
-    if cls.dims is None:
-        raise ValueError("Dimensions (dims) are not defined.")
-
-    name = name or cls.name
-    attrs = attrs or cls.attrs
     dataarray = DataArray(data, dims=cls.dims, name=name, attrs=attrs)
 
     if cls.dtype is not None:
         dataarray = dataarray.astype(cls.dtype)
 
-    for name, ctype in cls.coords.items():
-        shape = [dataarray.sizes[dim] for dim in ctype.dims]
+    for name, coord in cls.coords.items():
+        shape = [dataarray.sizes[dim] for dim in coord.dims]
 
         if name in coords:
-            dataarray.coords[name] = ctype.full(shape, coords[name])
+            dataarray.coords[name] = coord.full(shape, coords[name])
             continue
 
         if hasattr(cls, name):
-            dataarray.coords[name] = ctype.full(shape, getattr(cls, name))
+            dataarray.coords[name] = coord.full(shape, getattr(cls, name))
             continue
 
         raise ValueError(
-            f"A value for a coordinate {name} is not defined by default. "
-            f"This must be given as a keyword argument ({name}=<value>)."
+            f"Default value for a coordinate {name} is not defined. "
+            f"It must be given as a keyword argument ({name}=<value>)."
         )
 
     return dataarray
