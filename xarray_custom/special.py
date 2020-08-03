@@ -101,6 +101,37 @@ def new(
 
 
 @updatable_doc
+def empty(
+    cls: type,
+    shape: Shape,
+    dtype: Optional[Dtype] = None,
+    order: str = ORDER,
+    name: Optional[Name] = None,
+    attrs: Optional[Attrs] = None,
+    **coords,
+) -> DataArray:
+    """Create a custom DataArray filled with uninitialized values.
+
+    Args:
+        shape: Shape of the DataArray. It must match class ``dims``.
+        dtype: Datatype of the DataArray. Default is 64-bit float.
+            It is ignored if class ``dtype`` is defined.
+        order: Order of data in memory. Either ``'C'`` (row-major; C-style)
+            or ``'F'`` (column-major; Fortran-style) is accepted.
+        name: Name of the DataArray. Default is class ``name``.
+        attrs: Attributes of the DataArray. Default is class ``attrs``.
+        **coords: Coordinates of the DataArray defined by the class.
+
+    Returns:
+        Custom DataArray filled with uninitialized values.
+
+    {cls.coords.doc}
+
+    """
+    return cls(np.empty(shape, dtype, order), name, attrs, **coords)
+
+
+@updatable_doc
 def zeros(
     cls: type,
     shape: Shape,
@@ -160,37 +191,6 @@ def ones(
 
     """
     return cls(np.ones(shape, dtype, order), name, attrs, **coords)
-
-
-@updatable_doc
-def empty(
-    cls: type,
-    shape: Shape,
-    dtype: Optional[Dtype] = None,
-    order: str = ORDER,
-    name: Optional[Name] = None,
-    attrs: Optional[Attrs] = None,
-    **coords,
-) -> DataArray:
-    """Create a custom DataArray filled with uninitialized values.
-
-    Args:
-        shape: Shape of the DataArray. It must match class ``dims``.
-        dtype: Datatype of the DataArray. Default is 64-bit float.
-            It is ignored if class ``dtype`` is defined.
-        order: Order of data in memory. Either ``'C'`` (row-major; C-style)
-            or ``'F'`` (column-major; Fortran-style) is accepted.
-        name: Name of the DataArray. Default is class ``name``.
-        attrs: Attributes of the DataArray. Default is class ``attrs``.
-        **coords: Coordinates of the DataArray defined by the class.
-
-    Returns:
-        Custom DataArray filled with uninitialized values.
-
-    {cls.coords.doc}
-
-    """
-    return cls(np.empty(shape, dtype, order), name, attrs, **coords)
 
 
 @updatable_doc
