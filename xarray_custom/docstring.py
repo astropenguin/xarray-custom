@@ -66,7 +66,7 @@ class UpdatableDoc(str):
 
     """
 
-    def __new__(cls, doc: str) -> type:
+    def __new__(cls, doc: str) -> "UpdatableDoc":
         """Create an instance from a docstring."""
         return super().__new__(cls, cls.dedent(doc))
 
