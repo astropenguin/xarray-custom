@@ -152,7 +152,7 @@ class Doc(str):
         """Create an Doc instace from a DataArray class."""
         desc = sub(r"[\n|\s]+", " ", dataarrayclass.desc)
         dims = f"dims={dataarrayclass.dims!r}"
-        dtype = f"dims={dataarrayclass.dtype!r}"
+        dtype = f"dtype={dataarrayclass.dtype!r}"
 
         return cls(f"({dims}, {dtype}) {desc}")
 
