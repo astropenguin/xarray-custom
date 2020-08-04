@@ -19,17 +19,15 @@ from typing import Any, Callable, Dict, Union
 # dependencies
 import toml
 import yaml
-from .dataclasses import ctype
+from .dataclasses import coord
 
 
 # constants
 ATTRS = (
     "accessor",
-    "attrs",
     "desc",
     "dims",
     "dtype",
-    "name",
 )
 COORDS = "coords"
 DEFAULT = "default"
@@ -96,8 +94,8 @@ def include(path: Union[Path, str]) -> Callable:
 
                 dims = 'x', 'y'
                 dtype = float
-                x: ctype('x', int) = 0
-                y: ctype('y', int) = 0
+                x: coord('x', int) = 0
+                y: coord('y', int) = 0
 
     """
     path = Path(path).expanduser()
@@ -111,11 +109,11 @@ def include(path: Union[Path, str]) -> Callable:
             if name in config:
                 setattr(cls, name, config[name])
 
-        for name, coord in coords.items():
-            cls.__annotations__[name] = ctype(**coords)
+        for name, values in coords.items():
+            cls.__annotations__[name] = coord(**values)
 
-            if DEFAULT in coord:
-                setattr(cls, name, coord[DEFAULT])
+            if DEFAULT in values:
+                setattr(cls, name, values[DEFAULT])
 
         return cls
 
