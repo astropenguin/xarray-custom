@@ -1,0 +1,7 @@
+xarray_custom
+=============
+
+.. toctree::
+   :maxdepth: 4
+
+   xarray_custom

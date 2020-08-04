@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xarray_custom.special &#8212; xarray-custom 0.6.2 documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="../../_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main">
+<div class="container-xl">
+
+    
+    <a class="navbar-brand" href="../../index.html">
+      <img src="../../_static/dataset-diagram-logo.png" class="logo" alt="logo">
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-menu" class="col-lg-9 collapse navbar-collapse">
+      <ul id="navbar-main-elements" class="navbar-nav mr-auto">
+        
+        
+        
+      </ul>
+
+
+      
+
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/astropenguin/xarray-custom" target="_blank" rel="noopener">
+              <span><i class="fab fa-github-square"></i></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+          <div class="col-12 col-md-3 bd-sidebar">
+
+<form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+
+  <div class="bd-toc-item active">
+  
+
+  <ul class="nav bd-sidenav">
+      
+    </ul>
+
+</nav>
+          </div>
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+              
+
+<nav id="bd-toc-nav">
+    <ul class="nav section-nav flex-column">
+    
+    </ul>
+</nav>
+
+
+              
+          </div>
+          
+
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for xarray_custom.special</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module for special class methods of DataArray classes.&quot;&quot;&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;add_classmethods&quot;</span><span class="p">]</span>
+
+
+<span class="c1"># standard library</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+
+
+<span class="c1"># dependencies</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+<span class="kn">from</span> <span class="nn">.docstring</span> <span class="kn">import</span> <span class="n">updatable_doc</span>
+<span class="kn">from</span> <span class="nn">.typing</span> <span class="kn">import</span> <span class="n">Attrs</span><span class="p">,</span> <span class="n">Dtype</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Shape</span>
+
+
+<span class="c1"># constants</span>
+<span class="n">ORDER</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;C&quot;</span>
+
+
+<div class="viewcode-block" id="add_classmethods"><a class="viewcode-back" href="../../_apidoc/xarray_custom.html#xarray_custom.bases.add_classmethods">[docs]</a><span class="k">def</span> <span class="nf">add_classmethods</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">updater</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Add special class methods to a DataArray class.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        updater: Function to update docstrings of the class methods.</span>
+<span class="sd">            Its input must be a docstring (``str``) and its output</span>
+<span class="sd">            must be the updated docstring (``str``). If not specified</span>
+<span class="sd">            (by default), any docstrings will not be updated.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The same DataArray class as the input.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">updater</span><span class="p">)</span>
+
+    <span class="bp">cls</span><span class="o">.</span><span class="n">empty</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">empty</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">updater</span><span class="p">))</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="n">zeros</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">zeros</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">updater</span><span class="p">))</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="n">ones</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">ones</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">updater</span><span class="p">))</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="n">full</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">updater</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="bp">cls</span></div>
+
+
+<span class="nd">@updatable_doc</span>
+<span class="k">def</span> <span class="nf">new</span><span class="p">(</span>
+    <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Attrs</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">coords</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Create a custom DataArray from data and coordinates.</span>
+
+<span class="sd">    {cls.doc}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: Values of the DataArray. Its shape must match class ``dims``.</span>
+<span class="sd">            If class ``dtype`` is defined, it will be casted to that type.</span>
+<span class="sd">            If it cannot be casted, a ``ValueError`` will be raised.</span>
+<span class="sd">        name: Name of the DataArray. Default is class ``name``.</span>
+<span class="sd">        attrs: Attributes of the DataArray. Default is class ``attrs``.</span>
+<span class="sd">        **coords: Coordinates of the DataArray defined by the class.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Custom DataArray.</span>
+
+<span class="sd">    {cls.coords.doc}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataarray</span> <span class="o">=</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataarray</span> <span class="o">=</span> <span class="n">dataarray</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">coord</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">dataarray</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">coord</span><span class="o">.</span><span class="n">dims</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">:</span>
+            <span class="n">dataarray</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">coord</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">coords</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+            <span class="n">dataarray</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">coord</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Default value for a coordinate </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not defined. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;It must be given as a keyword argument (</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">=&lt;value&gt;).&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dataarray</span>
+
+
+<span class="nd">@updatable_doc</span>
+<span class="k">def</span> <span class="nf">empty</span><span class="p">(</span>
+    <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
+    <span class="n">shape</span><span class="p">:</span> <span class="n">Shape</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dtype</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">ORDER</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Attrs</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">coords</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Create a custom DataArray filled with uninitialized values.</span>
+
+<span class="sd">    {cls.doc}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        shape: Shape of the DataArray. It must match class ``dims``.</span>
+<span class="sd">        dtype: Datatype of the DataArray. Default is 64-bit float.</span>
+<span class="sd">            It is ignored if class ``dtype`` is defined.</span>
+<span class="sd">        order: Order of data in memory. Either ``&#39;C&#39;`` (row-major; C-style)</span>
+<span class="sd">            or ``&#39;F&#39;`` (column-major; Fortran-style) is accepted.</span>
+<span class="sd">        name: Name of the DataArray. Default is class ``name``.</span>
+<span class="sd">        attrs: Attributes of the DataArray. Default is class ``attrs``.</span>
+<span class="sd">        **coords: Coordinates of the DataArray defined by the class.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Custom DataArray filled with uninitialized values.</span>
+
+<span class="sd">    {cls.coords.doc}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">order</span><span class="p">),</span> <span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span><span class="p">)</span>
+
+
+<span class="nd">@updatable_doc</span>
+<span class="k">def</span> <span class="nf">zeros</span><span class="p">(</span>
+    <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
+    <span class="n">shape</span><span class="p">:</span> <span class="n">Shape</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dtype</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">ORDER</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Attrs</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">coords</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Create a custom DataArray filled with zeros.</span>
+
+<span class="sd">    {cls.doc}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        shape: Shape of the DataArray. It must match class ``dims``.</span>
+<span class="sd">        dtype: Datatype of the DataArray. Default is 64-bit float.</span>
+<span class="sd">            It is ignored if class ``dtype`` is defined.</span>
+<span class="sd">        order: Order of data in memory. Either ``&#39;C&#39;`` (row-major; C-style)</span>
+<span class="sd">            or ``&#39;F&#39;`` (column-major; Fortran-style) is accepted.</span>
+<span class="sd">        name: Name of the DataArray. Default is class ``name``.</span>
+<span class="sd">        attrs: Attributes of the DataArray. Default is class ``attrs``.</span>
+<span class="sd">        **coords: Coordinates of the DataArray defined by the class.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Custom DataArray filled with zeros.</span>
+
+<span class="sd">    {cls.coords.doc}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">order</span><span class="p">),</span> <span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span><span class="p">)</span>
+
+
+<span class="nd">@updatable_doc</span>
+<span class="k">def</span> <span class="nf">ones</span><span class="p">(</span>
+    <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
+    <span class="n">shape</span><span class="p">:</span> <span class="n">Shape</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dtype</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">ORDER</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Attrs</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">coords</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Create a custom DataArray filled with ones.</span>
+
+<span class="sd">    {cls.doc}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        shape: Shape of the DataArray. It must match class ``dims``.</span>
+<span class="sd">        dtype: Datatype of the DataArray. Default is 64-bit float.</span>
+<span class="sd">            It is ignored if class ``dtype`` is defined.</span>
+<span class="sd">        order: Order of data in memory. Either ``&#39;C&#39;`` (row-major; C-style)</span>
+<span class="sd">            or ``&#39;F&#39;`` (column-major; Fortran-style) is accepted.</span>
+<span class="sd">        name: Name of the DataArray. Default is class ``name``.</span>
+<span class="sd">        attrs: Attributes of the DataArray. Default is class ``attrs``.</span>
+<span class="sd">        **coords: Coordinates of the DataArray defined by the class.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Custom DataArray filled with ones.</span>
+
+<span class="sd">    {cls.coords.doc}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">order</span><span class="p">),</span> <span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span><span class="p">)</span>
+
+
+<span class="nd">@updatable_doc</span>
+<span class="k">def</span> <span class="nf">full</span><span class="p">(</span>
+    <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
+    <span class="n">shape</span><span class="p">:</span> <span class="n">Shape</span><span class="p">,</span>
+    <span class="n">fill_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dtype</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">ORDER</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Attrs</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">coords</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Create a custom DataArray filled with ``fill_value``.</span>
+
+<span class="sd">    {cls.doc}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        shape: Shape of the DataArray. It must match class ``dims``.</span>
+<span class="sd">        fill_value: Scalar value to fill the custom DataArray.</span>
+<span class="sd">        dtype: Datatype of the DataArray. Default is 64-bit float.</span>
+<span class="sd">            It is ignored if class ``dtype`` is defined.</span>
+<span class="sd">        order: Order of data in memory. Either ``&#39;C&#39;`` (row-major; C-style)</span>
+<span class="sd">            or ``&#39;F&#39;`` (column-major; Fortran-style) is accepted.</span>
+<span class="sd">        name: Name of the DataArray. Default is class ``name``.</span>
+<span class="sd">        attrs: Attributes of the DataArray. Default is class ``attrs``.</span>
+<span class="sd">        **coords: Coordinates of the DataArray defined by the class.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Custom DataArray filled with ``fill_value``.</span>
+
+<span class="sd">    {cls.coords.doc}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">order</span><span class="p">),</span> <span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span><span class="p">)</span>
+</pre></div>
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+
+    <script src="../../_static/js/index.js"></script>
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    <p>
+          &copy; Copyright 2020, Akio Taniguchi.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

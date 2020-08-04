@@ -1,0 +1,70 @@
+xarray\_custom package
+======================
+
+Submodules
+----------
+
+xarray\_custom.accessor module
+------------------------------
+
+.. automodule:: xarray_custom.accessor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+xarray\_custom.bases module
+---------------------------
+
+.. automodule:: xarray_custom.bases
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+xarray\_custom.dataclasses module
+---------------------------------
+
+.. automodule:: xarray_custom.dataclasses
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+xarray\_custom.docstring module
+-------------------------------
+
+.. automodule:: xarray_custom.docstring
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+xarray\_custom.special module
+-----------------------------
+
+.. automodule:: xarray_custom.special
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+xarray\_custom.typing module
+----------------------------
+
+.. automodule:: xarray_custom.typing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+xarray\_custom.utils module
+---------------------------
+
+.. automodule:: xarray_custom.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: xarray_custom
+   :members:
+   :undoc-members:
+   :show-inheritance:

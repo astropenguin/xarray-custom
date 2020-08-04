@@ -1,0 +1,705 @@
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xarray_custom package &#8212; xarray-custom 0.6.2 documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="../_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main">
+<div class="container-xl">
+
+    
+    <a class="navbar-brand" href="../index.html">
+      <img src="../_static/dataset-diagram-logo.png" class="logo" alt="logo">
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-menu" class="col-lg-9 collapse navbar-collapse">
+      <ul id="navbar-main-elements" class="navbar-nav mr-auto">
+        
+        
+        
+      </ul>
+
+
+      
+
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/astropenguin/xarray-custom" target="_blank" rel="noopener">
+              <span><i class="fab fa-github-square"></i></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+          <div class="col-12 col-md-3 bd-sidebar">
+
+<form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+
+  <div class="bd-toc-item active">
+  
+
+  <ul class="nav bd-sidenav">
+      
+    </ul>
+
+</nav>
+          </div>
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+              
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="nav section-nav flex-column">
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#submodules" class="nav-link">Submodules</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#module-xarray_custom.accessor" class="nav-link">xarray_custom.accessor module</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#module-xarray_custom.bases" class="nav-link">xarray_custom.bases module</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#module-xarray_custom.dataclasses" class="nav-link">xarray_custom.dataclasses module</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#module-xarray_custom.docstring" class="nav-link">xarray_custom.docstring module</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#module-xarray_custom.special" class="nav-link">xarray_custom.special module</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#module-xarray_custom.typing" class="nav-link">xarray_custom.typing module</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#module-xarray_custom.utils" class="nav-link">xarray_custom.utils module</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#module-xarray_custom" class="nav-link">Module contents</a>
+        </li>
+    
+    </ul>
+</nav>
+
+
+              
+          </div>
+          
+
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="section" id="xarray-custom-package">
+<h1>xarray_custom package<a class="headerlink" href="#xarray-custom-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-xarray_custom.accessor">
+<span id="xarray-custom-accessor-module"></span><h2>xarray_custom.accessor module<a class="headerlink" href="#module-xarray_custom.accessor" title="Permalink to this headline">¶</a></h2>
+<p>Module for DataArray accessor classes.</p>
+<dl class="py function">
+<dt id="xarray_custom.accessor.add_accessors">
+<code class="sig-prename descclassname">xarray_custom.accessor.</code><code class="sig-name descname">add_accessors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cls</span><span class="p">:</span> <span class="n">type</span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; type<a class="reference internal" href="../_modules/xarray_custom/accessor.html#add_accessors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xarray_custom.accessor.add_accessors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add unique and common accessors to a DataArray class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cls</strong> – DataArray class to which accessors are added.</p></li>
+<li><p><strong>name</strong> – Name of a common accessor. If not specified,
+only an unique accessor is added to the class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The same DataArray class as the input.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-xarray_custom.bases">
+<span id="xarray-custom-bases-module"></span><h2>xarray_custom.bases module<a class="headerlink" href="#module-xarray_custom.bases" title="Permalink to this headline">¶</a></h2>
+<p>Module for providing the base class of DataArray classes.</p>
+<dl class="py class">
+<dt id="xarray_custom.bases.DataArrayClassBase">
+<em class="property">class </em><code class="sig-prename descclassname">xarray_custom.bases.</code><code class="sig-name descname">DataArrayClassBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/xarray_custom/bases.html#DataArrayClassBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xarray_custom.bases.DataArrayClassBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Create a custom DataArray from data and coordinates.</p>
+<p>(dims=None, dtype=None) No description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Values of the DataArray. Its shape must match class <code class="docutils literal notranslate"><span class="pre">dims</span></code>.
+If class <code class="docutils literal notranslate"><span class="pre">dtype</span></code> is defined, it will be casted to that type.
+If it cannot be casted, a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised.</p></li>
+<li><p><strong>name</strong> – Name of the DataArray. Default is class <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p></li>
+<li><p><strong>attrs</strong> – Attributes of the DataArray. Default is class <code class="docutils literal notranslate"><span class="pre">attrs</span></code>.</p></li>
+<li><p><strong>**coords</strong> – Coordinates of the DataArray defined by the class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Custom DataArray.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="xarray_custom.bases.DataArrayClassBase.accessor">
+<code class="sig-name descname">accessor</code><em class="property">: Optional<span class="p">[</span>str<span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#xarray_custom.bases.DataArrayClassBase.accessor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="xarray_custom.bases.DataArrayClassBase.desc">
+<code class="sig-name descname">desc</code><em class="property">: str</em><em class="property"> = 'No description.'</em><a class="headerlink" href="#xarray_custom.bases.DataArrayClassBase.desc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="xarray_custom.bases.DataArrayClassBase.dims">
+<code class="sig-name descname">dims</code><em class="property">: Optional<span class="p">[</span>Union<span class="p">[</span>Sequence<span class="p">[</span>Hashable<span class="p">]</span><span class="p">, </span>Hashable<span class="p">]</span><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#xarray_custom.bases.DataArrayClassBase.dims" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="xarray_custom.bases.DataArrayClassBase.dtype">
+<code class="sig-name descname">dtype</code><em class="property">: Optional<span class="p">[</span>Union<span class="p">[</span>type<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#xarray_custom.bases.DataArrayClassBase.dtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="xarray_custom.bases.DataArrayClassBase.empty">
+<em class="property">classmethod </em><code class="sig-name descname">empty</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>Tuple<span class="p">[</span>int<span class="p">]</span><span class="p">, </span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">dtype</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span>type<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'C'</span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Hashable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Mapping<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">coords</span></em><span class="sig-paren">)</span> &#x2192; xarray.core.dataarray.DataArray<a class="headerlink" href="#xarray_custom.bases.DataArrayClassBase.empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a custom DataArray filled with uninitialized values.</p>
+<p>(dims=None, dtype=None) No description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shape</strong> – Shape of the DataArray. It must match class <code class="docutils literal notranslate"><span class="pre">dims</span></code>.</p></li>
+<li><p><strong>dtype</strong> – Datatype of the DataArray. Default is 64-bit float.
+It is ignored if class <code class="docutils literal notranslate"><span class="pre">dtype</span></code> is defined.</p></li>
+<li><p><strong>order</strong> – Order of data in memory. Either <code class="docutils literal notranslate"><span class="pre">'C'</span></code> (row-major; C-style)
+or <code class="docutils literal notranslate"><span class="pre">'F'</span></code> (column-major; Fortran-style) is accepted.</p></li>
+<li><p><strong>name</strong> – Name of the DataArray. Default is class <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p></li>
+<li><p><strong>attrs</strong> – Attributes of the DataArray. Default is class <code class="docutils literal notranslate"><span class="pre">attrs</span></code>.</p></li>
+<li><p><strong>**coords</strong> – Coordinates of the DataArray defined by the class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Custom DataArray filled with uninitialized values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xarray_custom.bases.DataArrayClassBase.full">
+<em class="property">classmethod </em><code class="sig-name descname">full</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>Tuple<span class="p">[</span>int<span class="p">]</span><span class="p">, </span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">fill_value</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="n">dtype</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span>type<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'C'</span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Hashable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Mapping<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">coords</span></em><span class="sig-paren">)</span> &#x2192; xarray.core.dataarray.DataArray<a class="headerlink" href="#xarray_custom.bases.DataArrayClassBase.full" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a custom DataArray filled with <code class="docutils literal notranslate"><span class="pre">fill_value</span></code>.</p>
+<p>(dims=None, dtype=None) No description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shape</strong> – Shape of the DataArray. It must match class <code class="docutils literal notranslate"><span class="pre">dims</span></code>.</p></li>
+<li><p><strong>fill_value</strong> – Scalar value to fill the custom DataArray.</p></li>
+<li><p><strong>dtype</strong> – Datatype of the DataArray. Default is 64-bit float.
+It is ignored if class <code class="docutils literal notranslate"><span class="pre">dtype</span></code> is defined.</p></li>
+<li><p><strong>order</strong> – Order of data in memory. Either <code class="docutils literal notranslate"><span class="pre">'C'</span></code> (row-major; C-style)
+or <code class="docutils literal notranslate"><span class="pre">'F'</span></code> (column-major; Fortran-style) is accepted.</p></li>
+<li><p><strong>name</strong> – Name of the DataArray. Default is class <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p></li>
+<li><p><strong>attrs</strong> – Attributes of the DataArray. Default is class <code class="docutils literal notranslate"><span class="pre">attrs</span></code>.</p></li>
+<li><p><strong>**coords</strong> – Coordinates of the DataArray defined by the class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Custom DataArray filled with <code class="docutils literal notranslate"><span class="pre">fill_value</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xarray_custom.bases.DataArrayClassBase.ones">
+<em class="property">classmethod </em><code class="sig-name descname">ones</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>Tuple<span class="p">[</span>int<span class="p">]</span><span class="p">, </span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">dtype</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span>type<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'C'</span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Hashable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Mapping<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">coords</span></em><span class="sig-paren">)</span> &#x2192; xarray.core.dataarray.DataArray<a class="headerlink" href="#xarray_custom.bases.DataArrayClassBase.ones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a custom DataArray filled with ones.</p>
+<p>(dims=None, dtype=None) No description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shape</strong> – Shape of the DataArray. It must match class <code class="docutils literal notranslate"><span class="pre">dims</span></code>.</p></li>
+<li><p><strong>dtype</strong> – Datatype of the DataArray. Default is 64-bit float.
+It is ignored if class <code class="docutils literal notranslate"><span class="pre">dtype</span></code> is defined.</p></li>
+<li><p><strong>order</strong> – Order of data in memory. Either <code class="docutils literal notranslate"><span class="pre">'C'</span></code> (row-major; C-style)
+or <code class="docutils literal notranslate"><span class="pre">'F'</span></code> (column-major; Fortran-style) is accepted.</p></li>
+<li><p><strong>name</strong> – Name of the DataArray. Default is class <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p></li>
+<li><p><strong>attrs</strong> – Attributes of the DataArray. Default is class <code class="docutils literal notranslate"><span class="pre">attrs</span></code>.</p></li>
+<li><p><strong>**coords</strong> – Coordinates of the DataArray defined by the class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Custom DataArray filled with ones.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xarray_custom.bases.DataArrayClassBase.zeros">
+<em class="property">classmethod </em><code class="sig-name descname">zeros</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>Tuple<span class="p">[</span>int<span class="p">]</span><span class="p">, </span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">dtype</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span>type<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'C'</span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Hashable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Mapping<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">coords</span></em><span class="sig-paren">)</span> &#x2192; xarray.core.dataarray.DataArray<a class="headerlink" href="#xarray_custom.bases.DataArrayClassBase.zeros" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a custom DataArray filled with zeros.</p>
+<p>(dims=None, dtype=None) No description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shape</strong> – Shape of the DataArray. It must match class <code class="docutils literal notranslate"><span class="pre">dims</span></code>.</p></li>
+<li><p><strong>dtype</strong> – Datatype of the DataArray. Default is 64-bit float.
+It is ignored if class <code class="docutils literal notranslate"><span class="pre">dtype</span></code> is defined.</p></li>
+<li><p><strong>order</strong> – Order of data in memory. Either <code class="docutils literal notranslate"><span class="pre">'C'</span></code> (row-major; C-style)
+or <code class="docutils literal notranslate"><span class="pre">'F'</span></code> (column-major; Fortran-style) is accepted.</p></li>
+<li><p><strong>name</strong> – Name of the DataArray. Default is class <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p></li>
+<li><p><strong>attrs</strong> – Attributes of the DataArray. Default is class <code class="docutils literal notranslate"><span class="pre">attrs</span></code>.</p></li>
+<li><p><strong>**coords</strong> – Coordinates of the DataArray defined by the class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Custom DataArray filled with zeros.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-xarray_custom.dataclasses">
+<span id="xarray-custom-dataclasses-module"></span><h2>xarray_custom.dataclasses module<a class="headerlink" href="#module-xarray_custom.dataclasses" title="Permalink to this headline">¶</a></h2>
+<p>Module for creating custom DataArray classes.</p>
+<p>This module provides functions which help to create a custom DataArray class
+with fixed dimensions, datatype, and coordinates. Two functions are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dataarrayclass</span></code>: Class decorator to construct a custom DataArray class.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coord</span></code>: Create a DataArray class for the definition of a coordinate.</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<p>To create a custom DataArray class to represent images:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@dataarrayclass</span>
+<span class="k">class</span> <span class="nc">Image</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;DataArray class to represent images.&quot;&quot;&quot;</span>
+
+    <span class="n">accessor</span> <span class="o">=</span> <span class="s1">&#39;img&#39;</span>
+    <span class="n">dims</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span>
+
+    <span class="n">x</span><span class="p">:</span> <span class="n">coord</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">coord</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The code style is similar to that of Python’s dataclass.
+A DataArray is then created using the class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span> <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+<span class="c1"># &lt;xarray.DataArray (x: 2, y: 2)&gt;</span>
+<span class="c1"># array([[0., 1.],</span>
+<span class="c1">#        [2., 3.]])</span>
+<span class="c1"># Coordinates:</span>
+<span class="c1">#   * x        (x) int64 0 1</span>
+<span class="c1">#   * y        (y) int64 0 1</span>
+</pre></div>
+</div>
+<p>Because <code class="docutils literal notranslate"><span class="pre">dims</span></code>, <code class="docutils literal notranslate"><span class="pre">dtype</span></code>, and coordinates are pre-defined,
+it is much easier to create a DataArray with given data.
+Custom methods can be used via an accessor:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">normalized</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">normalized</span><span class="p">)</span>
+
+<span class="c1"># &lt;xarray.DataArray (x: 2, y: 2)&gt;</span>
+<span class="c1"># array([[0.        , 0.33333333],</span>
+<span class="c1">#        [0.66666667, 1.        ]])</span>
+<span class="c1"># Coordinates:</span>
+<span class="c1">#   * x        (x) int64 0 1</span>
+<span class="c1">#   * y        (y) int64 0 1</span>
+</pre></div>
+</div>
+<p>Like NumPy, several special class methods are available
+to create a DataArray filled with some values:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ones</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ones</span><span class="p">)</span>
+
+<span class="c1"># &lt;xarray.DataArray (x: 2, y: 2)&gt;</span>
+<span class="c1"># array([[1., 1.],</span>
+<span class="c1">#        [1., 1.]])</span>
+<span class="c1"># Coordinates:</span>
+<span class="c1">#   * x        (x) int64 0 0</span>
+<span class="c1">#   * y        (y) int64 0 0</span>
+</pre></div>
+</div>
+<p>Inheriting a custom DataArray class is possible to
+create a derivative DataArray class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WeightedImage</span><span class="p">(</span><span class="n">Image</span><span class="p">):</span>
+    <span class="n">accessor</span> <span class="o">=</span> <span class="s1">&#39;wimg&#39;</span>
+    <span class="n">w</span><span class="p">:</span> <span class="n">coord</span><span class="p">((</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+<span class="n">zeros</span> <span class="o">=</span> <span class="n">Weightedimage</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">zeros</span><span class="p">)</span>
+
+<span class="c1"># &lt;xarray.DataArray (x: 2, y: 2)&gt;</span>
+<span class="c1"># array([[1., 1.],</span>
+<span class="c1">#        [1., 1.]])</span>
+<span class="c1"># Coordinates:</span>
+<span class="c1">#   * x        (x) int64 0 0</span>
+<span class="c1">#   * y        (y) int64 0 0</span>
+<span class="c1">#     w        (x, y) float64 1.0 1.0 1.0 1.0</span>
+</pre></div>
+</div>
+<dl class="py function">
+<dt id="xarray_custom.dataclasses.coord">
+<code class="sig-prename descclassname">xarray_custom.dataclasses.</code><code class="sig-name descname">coord</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dims</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span>Sequence<span class="p">[</span>Hashable<span class="p">]</span><span class="p">, </span>Hashable<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dtype</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span>type<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">desc</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">_</span></em><span class="sig-paren">)</span> &#x2192; type<a class="reference internal" href="../_modules/xarray_custom/dataclasses.html#coord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xarray_custom.dataclasses.coord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a DataArray class for the definition of a coordinate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dims</strong> – Dimensions of the coordinate.</p></li>
+<li><p><strong>dtype</strong> – Datatype of the coordinate. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>,
+which means that an input of any datatype is accepted.</p></li>
+<li><p><strong>desc</strong> – Short description of the coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataArray class for the coordinate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="xarray_custom.dataclasses.dataarrayclass">
+<code class="sig-prename descclassname">xarray_custom.dataclasses.</code><code class="sig-name descname">dataarrayclass</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cls</span><span class="p">:</span> <span class="n">type</span></em><span class="sig-paren">)</span> &#x2192; type<a class="reference internal" href="../_modules/xarray_custom/dataclasses.html#dataarrayclass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xarray_custom.dataclasses.dataarrayclass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class decorator to construct a custom DataArray class.</p>
+<p>A class can define properties of DataArray to be created.
+The following class variables are accepted (see examples).</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dims</span></code> (str or tuple of str): Name(s) of dimension(s).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dtype</span></code> (str or type): Datatype of DataArray.</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">desc</span></code> (str): Short description of DataArray. Users can</dt><dd><p>alternatively define it by a docstring (<code class="docutils literal notranslate"><span class="pre">__doc__</span></code>).</p>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">accessor</span></code> (str): Name of accessor (if necessary).</p></li>
+</ul>
+<p>The coordinates of DataArray can also be defined as class
+variables using the <code class="docutils literal notranslate"><span class="pre">coord</span></code> function (see examples).</p>
+<p>Finally users can define custom instance methods which can
+be used by an accessor whose name is defined by <code class="docutils literal notranslate"><span class="pre">accessor</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cls</strong> – Class to be decorated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Decorated class as a DataArray class.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>To create a custom DataArray class to represent images:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@dataarrayclass</span>
+<span class="k">class</span> <span class="nc">Image</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;DataArray class to represent images.&quot;&quot;&quot;</span>
+
+    <span class="n">accessor</span> <span class="o">=</span> <span class="s1">&#39;img&#39;</span>
+    <span class="n">dims</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span>
+
+    <span class="n">x</span><span class="p">:</span> <span class="n">coord</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">coord</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-xarray_custom.docstring">
+<span id="xarray-custom-docstring-module"></span><h2>xarray_custom.docstring module<a class="headerlink" href="#module-xarray_custom.docstring" title="Permalink to this headline">¶</a></h2>
+<p>Module for making docstrings of functions updatable.</p>
+<dl class="py function">
+<dt id="xarray_custom.docstring.updatable_doc">
+<code class="sig-prename descclassname">xarray_custom.docstring.</code><code class="sig-name descname">updatable_doc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span></em><span class="sig-paren">)</span> &#x2192; Callable<a class="reference internal" href="../_modules/xarray_custom/docstring.html#updatable_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xarray_custom.docstring.updatable_doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator for making the docstring of a function updatable.</p>
+<p>A decorated function has the <code class="docutils literal notranslate"><span class="pre">set</span></code> method, by which an update
+function for the docstring is registered to the function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>func</strong> – A function whose docstring should be updatable.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Decorated function with the <code class="docutils literal notranslate"><span class="pre">copy</span></code> and <code class="docutils literal notranslate"><span class="pre">set</span></code> methods.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="xarray_custom.docstring.copy">
+<code class="sig-prename descclassname">xarray_custom.docstring.</code><code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xarray_custom.docstring.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy the decorated function and return a new one.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xarray_custom.docstring.set">
+<code class="sig-prename descclassname">xarray_custom.docstring.</code><code class="sig-name descname">set</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xarray_custom.docstring.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set an update function to the decorated function.</p>
+</dd></dl>
+
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@updatable_doc</span>
+<span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Docstring.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<span class="c1"># set an updater function</span>
+<span class="n">func</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="k">lambda</span> <span class="n">doc</span><span class="p">:</span> <span class="n">doc</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">))</span>
+
+<span class="c1"># show the help of the decorated function</span>
+<span class="n">help</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="c1"># -&gt; Docstring!</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-xarray_custom.special">
+<span id="xarray-custom-special-module"></span><h2>xarray_custom.special module<a class="headerlink" href="#module-xarray_custom.special" title="Permalink to this headline">¶</a></h2>
+<p>Module for special class methods of DataArray classes.</p>
+<dl class="py function">
+<dt id="xarray_custom.special.add_classmethods">
+<code class="sig-prename descclassname">xarray_custom.special.</code><code class="sig-name descname">add_classmethods</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cls</span><span class="p">:</span> <span class="n">type</span></em>, <em class="sig-param"><span class="n">updater</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Callable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; type<a class="reference internal" href="../_modules/xarray_custom/special.html#add_classmethods"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xarray_custom.special.add_classmethods" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add special class methods to a DataArray class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>updater</strong> – Function to update docstrings of the class methods.
+Its input must be a docstring (<code class="docutils literal notranslate"><span class="pre">str</span></code>) and its output
+must be the updated docstring (<code class="docutils literal notranslate"><span class="pre">str</span></code>). If not specified
+(by default), any docstrings will not be updated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The same DataArray class as the input.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-xarray_custom.typing">
+<span id="xarray-custom-typing-module"></span><h2>xarray_custom.typing module<a class="headerlink" href="#module-xarray_custom.typing" title="Permalink to this headline">¶</a></h2>
+<p>Module for type hints of xarray DataArray.</p>
+<p>This module provides type hints of xarray DataArray
+which are intended to be used other modules of the package.</p>
+<dl class="py data">
+<dt id="xarray_custom.typing.Attrs">
+<code class="sig-prename descclassname">xarray_custom.typing.</code><code class="sig-name descname">Attrs</code><a class="headerlink" href="#xarray_custom.typing.Attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>The central part of internal API.</p>
+<p>This represents a generic version of type ‘origin’ with type arguments ‘params’.
+There are two kind of these aliases: user defined and special. The special ones
+are wrappers around builtin collections and ABCs in collections.abc. These must
+have ‘name’ always set. If ‘inst’ is False, then the alias can’t be instantiated,
+this is used by e.g. typing.List and typing.Dict.</p>
+<p>alias of Mapping</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="xarray_custom.typing.Dims">
+<code class="sig-prename descclassname">xarray_custom.typing.</code><code class="sig-name descname">Dims</code><a class="headerlink" href="#xarray_custom.typing.Dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>The central part of internal API.</p>
+<p>This represents a generic version of type ‘origin’ with type arguments ‘params’.
+There are two kind of these aliases: user defined and special. The special ones
+are wrappers around builtin collections and ABCs in collections.abc. These must
+have ‘name’ always set. If ‘inst’ is False, then the alias can’t be instantiated,
+this is used by e.g. typing.List and typing.Dict.</p>
+<p>alias of Union[Sequence[Hashable], Hashable]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="xarray_custom.typing.Dtype">
+<code class="sig-prename descclassname">xarray_custom.typing.</code><code class="sig-name descname">Dtype</code><a class="headerlink" href="#xarray_custom.typing.Dtype" title="Permalink to this definition">¶</a></dt>
+<dd><p>The central part of internal API.</p>
+<p>This represents a generic version of type ‘origin’ with type arguments ‘params’.
+There are two kind of these aliases: user defined and special. The special ones
+are wrappers around builtin collections and ABCs in collections.abc. These must
+have ‘name’ always set. If ‘inst’ is False, then the alias can’t be instantiated,
+this is used by e.g. typing.List and typing.Dict.</p>
+<p>alias of Union[type, str]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="xarray_custom.typing.Name">
+<code class="sig-prename descclassname">xarray_custom.typing.</code><code class="sig-name descname">Name</code><a class="headerlink" href="#xarray_custom.typing.Name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The central part of internal API.</p>
+<p>This represents a generic version of type ‘origin’ with type arguments ‘params’.
+There are two kind of these aliases: user defined and special. The special ones
+are wrappers around builtin collections and ABCs in collections.abc. These must
+have ‘name’ always set. If ‘inst’ is False, then the alias can’t be instantiated,
+this is used by e.g. typing.List and typing.Dict.</p>
+<p>alias of Hashable</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="xarray_custom.typing.Shape">
+<code class="sig-prename descclassname">xarray_custom.typing.</code><code class="sig-name descname">Shape</code><a class="headerlink" href="#xarray_custom.typing.Shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>The central part of internal API.</p>
+<p>This represents a generic version of type ‘origin’ with type arguments ‘params’.
+There are two kind of these aliases: user defined and special. The special ones
+are wrappers around builtin collections and ABCs in collections.abc. These must
+have ‘name’ always set. If ‘inst’ is False, then the alias can’t be instantiated,
+this is used by e.g. typing.List and typing.Dict.</p>
+<p>alias of Union[Tuple[int], int]</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-xarray_custom.utils">
+<span id="xarray-custom-utils-module"></span><h2>xarray_custom.utils module<a class="headerlink" href="#module-xarray_custom.utils" title="Permalink to this headline">¶</a></h2>
+<p>Module for utilities which help to create custom DataArray classes.</p>
+<p>Currently this module only provides <code class="docutils literal notranslate"><span class="pre">include</span></code> class decorator
+which can include a custom DataArray definition written in a file.</p>
+<ul class="simple">
+<li><p>include: Class decorator to include a custom DataArray definition in a file.</p></li>
+</ul>
+<dl class="py function">
+<dt id="xarray_custom.utils.include">
+<code class="sig-prename descclassname">xarray_custom.utils.</code><code class="sig-name descname">include</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>pathlib.Path<span class="p">, </span>str<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Callable<a class="reference internal" href="../_modules/xarray_custom/utils.html#include"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xarray_custom.utils.include" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class decorator to include a custom DataArray definition in a file.</p>
+<p>File format of either JSON, TOML, or YAML is accepted.
+The following <code class="docutils literal notranslate"><span class="pre">key=value</span></code> pairs can be included if available.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dims=&lt;array</span> <span class="pre">of</span> <span class="pre">string&gt;</span></code>: Dimensions of the DataArray.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dtype=&lt;string&gt;</span></code>: Datatype of the DataArray.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">desc=&lt;string&gt;</span></code>: Short description of the DataArray.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords=&lt;map</span> <span class="pre">of</span> <span class="pre">coord&gt;</span></code>: Definition of coordinates (coords).
+Each coord is a map which can have the following <code class="docutils literal notranslate"><span class="pre">key=value</span></code> pairs.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">dims=&lt;array</span> <span class="pre">of</span> <span class="pre">string&gt;</span></code>: Dimensions of a coordinate.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dtype=&lt;string&gt;</span></code>: Datatype of a coordinate.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">desc=&lt;string&gt;</span></code>: Short description of a coordinate.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">default=&lt;any&gt;</span></code>: Default value of a coordinate.</p></li>
+</ul>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – Path or filename of the file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Decorator to include the definition.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>If a definition is written in <code class="docutils literal notranslate"><span class="pre">dataarray.toml</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># dataarray.toml</span>
+
+<span class="n">dims</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span> <span class="p">]</span>
+<span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+<span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot;DataArray class to represent images.&quot;</span>
+
+<span class="p">[</span><span class="n">coords</span><span class="o">.</span><span class="n">x</span><span class="p">]</span>
+<span class="n">dims</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span>
+<span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;int&quot;</span>
+<span class="n">default</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="p">[</span><span class="n">coords</span><span class="o">.</span><span class="n">y</span><span class="p">]</span>
+<span class="n">dims</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span>
+<span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;int&quot;</span>
+<span class="n">default</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>then the following two class definitions are equivalent:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@include</span><span class="p">(</span><span class="s1">&#39;dataarray.toml&#39;</span><span class="p">)</span>
+<span class="nd">@dataarrayclass</span>
+<span class="k">class</span> <span class="nc">Image</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@dataarrayclass</span>
+<span class="k">class</span> <span class="nc">Image</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;DataArray class to represent images.&quot;&quot;&quot;</span>
+
+    <span class="n">dims</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">coord</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">coord</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-xarray_custom">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xarray_custom" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+
+    <script src="../_static/js/index.js"></script>
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    <p>
+          &copy; Copyright 2020, Akio Taniguchi.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

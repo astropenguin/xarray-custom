@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xarray_custom.utils &#8212; xarray-custom 0.6.2 documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="../../_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main">
+<div class="container-xl">
+
+    
+    <a class="navbar-brand" href="../../index.html">
+      <img src="../../_static/dataset-diagram-logo.png" class="logo" alt="logo">
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-menu" class="col-lg-9 collapse navbar-collapse">
+      <ul id="navbar-main-elements" class="navbar-nav mr-auto">
+        
+        
+        
+      </ul>
+
+
+      
+
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/astropenguin/xarray-custom" target="_blank" rel="noopener">
+              <span><i class="fab fa-github-square"></i></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+          <div class="col-12 col-md-3 bd-sidebar">
+
+<form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+
+  <div class="bd-toc-item active">
+  
+
+  <ul class="nav bd-sidenav">
+      
+    </ul>
+
+</nav>
+          </div>
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+              
+
+<nav id="bd-toc-nav">
+    <ul class="nav section-nav flex-column">
+    
+    </ul>
+</nav>
+
+
+              
+          </div>
+          
+
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for xarray_custom.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module for utilities which help to create custom DataArray classes.</span>
+
+<span class="sd">Currently this module only provides ``include`` class decorator</span>
+<span class="sd">which can include a custom DataArray definition written in a file.</span>
+
+<span class="sd">- include: Class decorator to include a custom DataArray definition in a file.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;include&quot;</span><span class="p">]</span>
+
+
+<span class="c1"># standard library</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+
+
+<span class="c1"># dependencies</span>
+<span class="kn">import</span> <span class="nn">toml</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">.dataclasses</span> <span class="kn">import</span> <span class="n">coord</span>
+
+
+<span class="c1"># constants</span>
+<span class="n">ATTRS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;accessor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;desc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dims&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dtype&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">COORDS</span> <span class="o">=</span> <span class="s2">&quot;coords&quot;</span>
+<span class="n">DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+<span class="n">JSON_RE</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\.json$&quot;</span>
+<span class="n">TOML_RE</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\.toml$&quot;</span>
+<span class="n">YAML_RE</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\.ya?ml$&quot;</span>
+
+
+<span class="c1"># main functions</span>
+<div class="viewcode-block" id="include"><a class="viewcode-back" href="../../_apidoc/xarray_custom.html#xarray_custom.utils.include">[docs]</a><span class="k">def</span> <span class="nf">include</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class decorator to include a custom DataArray definition in a file.</span>
+
+<span class="sd">    File format of either JSON, TOML, or YAML is accepted.</span>
+<span class="sd">    The following ``key=value`` pairs can be included if available.</span>
+
+<span class="sd">    - ``dims=&lt;array of string&gt;``: Dimensions of the DataArray.</span>
+<span class="sd">    - ``dtype=&lt;string&gt;``: Datatype of the DataArray.</span>
+<span class="sd">    - ``desc=&lt;string&gt;``: Short description of the DataArray.</span>
+<span class="sd">    - ``coords=&lt;map of coord&gt;``: Definition of coordinates (coords).</span>
+<span class="sd">      Each coord is a map which can have the following ``key=value`` pairs.</span>
+
+<span class="sd">      - ``dims=&lt;array of string&gt;``: Dimensions of a coordinate.</span>
+<span class="sd">      - ``dtype=&lt;string&gt;``: Datatype of a coordinate.</span>
+<span class="sd">      - ``desc=&lt;string&gt;``: Short description of a coordinate.</span>
+<span class="sd">      - ``default=&lt;any&gt;``: Default value of a coordinate.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: Path or filename of the file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Decorator to include the definition.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        If a definition is written in ``dataarray.toml``::</span>
+
+<span class="sd">            # dataarray.toml</span>
+
+<span class="sd">            dims = [ &quot;x&quot;, &quot;y&quot; ]</span>
+<span class="sd">            dtype = &quot;float&quot;</span>
+<span class="sd">            desc = &quot;DataArray class to represent images.&quot;</span>
+
+<span class="sd">            [coords.x]</span>
+<span class="sd">            dims = &quot;x&quot;</span>
+<span class="sd">            dtype = &quot;int&quot;</span>
+<span class="sd">            default = 0</span>
+
+<span class="sd">            [coords.y]</span>
+<span class="sd">            dims = &quot;y&quot;</span>
+<span class="sd">            dtype = &quot;int&quot;</span>
+<span class="sd">            default = 0</span>
+
+<span class="sd">        then the following two class definitions are equivalent::</span>
+
+<span class="sd">            @include(&#39;dataarray.toml&#39;)</span>
+<span class="sd">            @dataarrayclass</span>
+<span class="sd">            class Image:</span>
+<span class="sd">                pass</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            @dataarrayclass</span>
+<span class="sd">            class Image:</span>
+<span class="sd">                \&quot;\&quot;\&quot;DataArray class to represent images.\&quot;\&quot;\&quot;</span>
+
+<span class="sd">                dims = &#39;x&#39;, &#39;y&#39;</span>
+<span class="sd">                dtype = float</span>
+<span class="sd">                x: coord(&#39;x&#39;, int) = 0</span>
+<span class="sd">                y: coord(&#39;y&#39;, int) = 0</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
+    <span class="n">loader</span> <span class="o">=</span> <span class="n">choose_loader_from</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">loader</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">COORDS</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ATTRS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">coords</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="vm">__annotations__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">coord</span><span class="p">(</span><span class="o">**</span><span class="n">values</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">DEFAULT</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="n">DEFAULT</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="bp">cls</span>
+
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+<span class="c1"># helper functions</span>
+<span class="k">def</span> <span class="nf">choose_loader_from</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Choose file loader based on a filename.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">JSON_RE</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">load_json</span>
+    <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">TOML_RE</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">load_toml</span>
+    <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">YAML_RE</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">load_yaml</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid file format.&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">load_json</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Load a JSON file to create a dictionary.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">load_toml</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Load a TOML file to create a dictionary.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">toml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">load_yaml</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Load a YAML file to create a dictionary.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeLoader</span><span class="p">)</span>
+</pre></div>
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+
+    <script src="../../_static/js/index.js"></script>
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    <p>
+          &copy; Copyright 2020, Akio Taniguchi.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
