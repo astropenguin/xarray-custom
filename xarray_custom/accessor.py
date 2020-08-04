@@ -1,96 +1,128 @@
-"""Module for accessors of custom DataArray classes.
-
-This module provides a function (``add_methods_to_accessor``)
-to add user-defined methods to an accessor at decoration.
-
-"""
-__all__ = ["add_methods_to_accessor"]
+"""Module for DataArray accessor classes."""
+__all__ = ["add_accessors"]
 
 
 # standard library
-import re
-from functools import wraps
+from collections import defaultdict
+from functools import lru_cache
+from itertools import chain
+from inspect import getsource, signature
+from re import sub
+from textwrap import dedent
 from types import FunctionType
-from typing import Any, Callable, Optional
+from typing import Any, Callable, List, Optional
+from uuid import uuid4
 
 
 # dependencies
 from xarray import DataArray, register_dataarray_accessor
 
 
-# constants
-SPECIAL_NAME = "^__.+__$"
-
-
-# main functions
-def add_methods_to_accessor(
-    cls: type, accessor: Optional[str] = None, override: bool = False,
-) -> type:
-    """Create a DataArray accessor and add methods in a class to it.
+# main features
+def add_accessors(cls: type, name: Optional[str] = None) -> type:
+    """Add unique and common accessors to a DataArray class.
 
     Args:
-        cls: Custom DataArray class.
-        accessor: Name of a DataArray accessor.
-        override: Whether overriding a DataArray accessor of the same name
-            if it is already registered in DataArray. If False (default),
-            this function tries to add methods to it if the namespace
-            has no conflicts. Otherwise an AttributeError is raised.
+        cls: DataArray class to which accessors are added.
+        name: Name of a common accessor. If not specified,
+            only an unique accessor is added to the class.
 
     Returns:
-        cls: Same as ``cls`` in the arguments.
-
-    Raises:
-        AttributeError: Raised if this function fails to add methods
-            due to some conflicts between method names and the
-            namespace of the existing DataArray accessor.
+        The same DataArray class as the input.
 
     """
-    if accessor is None:
-        return cls
 
-    if not hasattr(DataArray, accessor) or override:
-        Accessor = create_accessor(accessor)
-    else:
-        Accessor = getattr(DataArray, accessor)
+    class UniqueAccessor(UniqueAccessorBase):
+        _dataarrayclass = cls
 
-    for name in dir(cls):
-        obj = getattr(cls, name)
-
-        if is_user_defined_method(obj):
-            Accessor._add_method(name, obj)
+    class CommonAccessor(CommonAccessorBase):
+        _dataarrayclass = cls
+        _name = name
 
     return cls
 
 
-# helper functions
-def create_accessor(accessor: str) -> type:
-    """Create a new DataArray accessor with special methods."""
+# helper features
+class CommonAccessorBase:
+    """Base class for common accessors of DataArray classes."""
 
-    class Accessor:
-        def __init__(self, _accessed: DataArray) -> None:
-            self._accessed = _accessed
+    _dataarrayclasses = defaultdict(list)
+    _dataarrayclass: type
+    _name: str
 
-        @classmethod
-        def _add_method(cls, name: str, method: Callable) -> None:
-            if hasattr(cls, name):
-                raise AttributeError(f"Method {name!r} already exists.")
+    def __init_subclass__(cls):
+        """Initialize a subclass with a bound DataArray class."""
+        if not cls._name:
+            return
 
-            @wraps(method)
-            def accessor_method(self, *args, **kwargs):
-                return method(self._accessed, *args, **kwargs)
+        if cls._name not in cls._dataarrayclasses:
+            register_dataarray_accessor(cls._name)(cls)
 
-            setattr(cls, name, accessor_method)
+        cls._dataarrayclasses[cls._name].insert(0, cls._dataarrayclass)
 
-    register_dataarray_accessor(accessor)(Accessor)
-    return Accessor
+    def __init__(self, dataarray: DataArray) -> None:
+        """Initialize an instance with a DataArray to be accessed."""
+        self._dataarray = dataarray
+
+    def __getattr__(self, name: str) -> Any:
+        """Get a method or an attribute of the DataArray class."""
+        for dataarrayclass in self._dataarrayclasses[self._name]:
+            bound = dataarrayclass._accessor(self._dataarray)
+
+            if hasattr(bound, name):
+                return getattr(bound, name)
+
+        raise AttributeError(f"Any DataArray class has no attribute {name!r}")
+
+    def __dir__(self) -> List[str]:
+        """List names in the union namespace of DataArray classes."""
+        dirs = map(dir, self._dataarrayclasses[self._name])
+        return list(set(chain.from_iterable(dirs)))
 
 
-def is_user_defined_method(obj: Any) -> bool:
-    """Return whether ``obj`` is a user-defined method."""
-    if not isinstance(obj, FunctionType):
-        return False
+class UniqueAccessorBase:
+    """Base class for unique accessors of DataArray classes."""
 
-    if re.search(SPECIAL_NAME, obj.__name__):
-        return False
+    _dataarrayclass: type
+    _name: str
 
-    return True
+    def __init_subclass__(cls) -> None:
+        """Initialize a subclass with a bound DataArray class."""
+        cls._dataarrayclass._accessor = cls
+        cls._name = "_accessor_" + uuid4().hex[:16]
+        register_dataarray_accessor(cls._name)(cls)
+
+    def __init__(self, dataarray: DataArray) -> None:
+        """Initialize an instance with a DataArray to be accessed."""
+        self._dataarray = dataarray
+
+    @lru_cache(None)
+    def __bind_function(self, func: Callable) -> Callable:
+        """Convert a function to a method of an instance."""
+        first_arg = list(signature(func).parameters)[0]
+
+        pattern = rf"(?<!\w){first_arg}\."
+        repl = rf"{first_arg}.{self._name}."
+        source = dedent(getsource(func))
+
+        exec(sub(pattern, repl, source), func.__globals__, locals())
+        return locals()[func.__name__].__get__(self._dataarray)
+
+    def __getattr__(self, name: str) -> Any:
+        """Get a method or an attribute of the DataArray class."""
+        try:
+            return getattr(self._dataarray, name)
+        except AttributeError:
+            obj = getattr(self._dataarrayclass, name)
+
+        if isinstance(obj, FunctionType):
+            return self.__bind_function(obj)
+
+        if isinstance(obj, property):
+            return self.__bind_function(obj.fget)
+
+        return obj
+
+    def __dir__(self) -> List[str]:
+        """List names in the namespace of the DataArray class."""
+        return dir(self._dataarrayclass)

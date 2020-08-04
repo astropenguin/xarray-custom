@@ -4,19 +4,21 @@ This module provides functions which help to create a custom DataArray class
 with fixed dimensions, datatype, and coordinates. Two functions are available:
 
 - ``dataarrayclass``: Class decorator to construct a custom DataArray class.
-- ``ctype``: Create a DataArray class for the definition of a coordinate.
+- ``coord``: Create a DataArray class for the definition of a coordinate.
 
 Examples:
     To create a custom DataArray class to represent images::
 
-        @dataarrayclass(accessor='img')
+        @dataarrayclass
         class Image:
             \"\"\"DataArray class to represent images.\"\"\"
 
+            accessor = 'img'
             dims = 'x', 'y'
             dtype = float
-            x: ctype('x', int) = 0
-            y: ctype('y', int) = 0
+
+            x: coord('x', int) = 0
+            y: coord('y', int) = 0
 
             def normalize(self):
                 return self / self.max()
@@ -64,9 +66,9 @@ Examples:
     Inheriting a custom DataArray class is possible to
     create a derivative DataArray class::
 
-        @dataarrayclass(accessor='wimg')
         class WeightedImage(Image):
-            w: ctype(('x', 'y'), float) = 1.0
+            accessor = 'wimg'
+            w: coord(('x', 'y'), float) = 1.0
 
         zeros = Weightedimage.zeros((2, 2))
         print(zeros)
@@ -80,22 +82,25 @@ Examples:
         #     w        (x, y) float64 1.0 1.0 1.0 1.0
 
 """
-__all__ = ["ctype", "dataarrayclass"]
+__all__ = ["coord", "dataarrayclass"]
 
 
 # standard library
-from typing import Callable, Optional, Union
+from typing import Optional
 
 
 # dependencies
-from .accessor import add_methods_to_accessor
-from .ensuring import ensure_dataarrayclass
-from .special import add_special_methods
+from .bases import DataArrayClassBase
 from .typing import Dims, Dtype
 
 
 # main functions
-def ctype(dims: Dims, dtype: Optional[Dtype] = None, desc: str = "", **_) -> type:
+def coord(
+    dims: Optional[Dims] = None,
+    dtype: Optional[Dtype] = None,
+    desc: Optional[str] = None,
+    **_
+) -> type:
     """Create a DataArray class for the definition of a coordinate.
 
     Args:
@@ -105,63 +110,60 @@ def ctype(dims: Dims, dtype: Optional[Dtype] = None, desc: str = "", **_) -> typ
         desc: Short description of the coordinate.
 
     Returns:
-        ctype: DataArray class for the coordinate.
+        DataArray class for the coordinate.
 
     """
-    attrs = dict(dims=dims, dtype=dtype, desc=desc)
-    return dataarrayclass(type("CType", (object,), attrs))
+    if dims is None:
+        dims = ()
+
+    if desc is None:
+        namespace = dict(dims=dims, dtype=dtype)
+    else:
+        namespace = dict(dims=dims, dtype=dtype, desc=desc)
+
+    return type("Coord", (DataArrayClassBase,), namespace)
 
 
-def dataarrayclass(
-    cls: Optional[type] = None,
-    *,
-    accessor: Optional[str] = None,
-    override_accessor: bool = False,
-    strict_dims: bool = False,
-    strict_dtype: bool = False,
-    docstring_style: str = "google",
-) -> Union[type, Callable]:
+def dataarrayclass(cls: type) -> type:
     """Class decorator to construct a custom DataArray class.
 
-    Keyword Args:
-        accessor: Name of a DataArray accessor for the custom DataArray.
-            User-defined methods in the class are added to the accessor.
-        override_accessor: Whether overriding a DataArray accessor
-            of the same name if it is already registered in DataArray.
-        strict_dims: Whether ``dims`` is consistent with superclasses.
-        strict_dtype: Whether ``dtype`` is consistent with superclasses.
-        docstring_style: Style of docstrings of special methods.
-            ``'google'`` is only available (``'numpy'`` will be added).
+    A class can define properties of DataArray to be created.
+    The following class variables are accepted (see examples).
+
+    - ``dims`` (str or tuple of str): Name(s) of dimension(s).
+    - ``dtype`` (str or type): Datatype of DataArray.
+    - ``desc`` (str): Short description of DataArray. Users can
+        alternatively define it by a docstring (``__doc__``).
+    - ``accessor`` (str): Name of accessor (if necessary).
+
+    The coordinates of DataArray can also be defined as class
+    variables using the ``coord`` function (see examples).
+
+    Finally users can define custom instance methods which can
+    be used by an accessor whose name is defined by ``accessor``.
+
+    Args:
+        cls: Class to be decorated.
 
     Returns:
-        decorator: Returned if any keyword-only arguments are given.
-        decorated: Returned if no keyword-only arguments are given.
+        Decorated class as a DataArray class.
 
     Examples:
         To create a custom DataArray class to represent images::
 
-            @dataarrayclass(accessor='img')
+            @dataarrayclass
             class Image:
                 \"\"\"DataArray class to represent images.\"\"\"
 
+                accessor = 'img'
                 dims = 'x', 'y'
                 dtype = float
-                x: ctype('x', int) = 0
-                y: ctype('y', int) = 0
+
+                x: coord('x', int) = 0
+                y: coord('y', int) = 0
 
                 def normalize(self):
                     return self / self.max()
 
     """
-
-    def decorator(cls: type) -> type:
-        ensure_dataarrayclass(cls, strict_dims, strict_dtype)
-        add_methods_to_accessor(cls, accessor, override_accessor)
-        add_special_methods(cls)
-
-        return cls
-
-    if cls is None:
-        return decorator
-    else:
-        return decorator(cls)
+    return type(cls.__name__, (DataArrayClassBase,), cls.__dict__.copy())

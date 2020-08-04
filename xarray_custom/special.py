@@ -1,20 +1,15 @@
-"""Module for special methods of custom DataArray classes.
-
-This module provides a function (``add_special_methods``)
-which adds special methods to a class at decoration.
-
-"""
-__all__ = ["add_special_methods"]
+"""Module for special class methods of DataArray classes."""
+__all__ = ["add_classmethods"]
 
 
 # standard library
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 
 # dependencies
 import numpy as np
 from xarray import DataArray
-from .docstring import format_doc
+from .docstring import updatable_doc
 from .typing import Attrs, Dtype, Name, Shape
 
 
@@ -22,60 +17,53 @@ from .typing import Attrs, Dtype, Name, Shape
 ORDER: str = "C"
 
 
-# main functions
-def add_special_methods(cls: type) -> type:
-    """Add special methods to a custom DataArray class.
+def add_classmethods(cls: type, updater: Optional[Callable] = None) -> type:
+    """Add special class methods to a DataArray class.
 
     Args:
-        cls: Custom DataArray class to be added.
+        updater: Function to update docstrings of the class methods.
+            Its input must be a docstring (``str``) and its output
+            must be the updated docstring (``str``). If not specified
+            (by default), any docstrings will not be updated.
 
     Returns:
-        cls: Same object as ``cls`` in the arguments.
+        The same DataArray class as the input.
 
     """
-    cls.__new__ = format_doc(__new__, cls)
-    cls.__doc__ = cls.__new__.__doc__
+    cls.__new__ = new.copy().set(updater)
 
-    cls.zeros = classmethod(format_doc(zeros, cls))
-    cls.empty = classmethod(format_doc(empty, cls))
-    cls.ones = classmethod(format_doc(ones, cls))
-    cls.full = classmethod(format_doc(full, cls))
+    cls.empty = classmethod(empty.copy().set(updater))
+    cls.zeros = classmethod(zeros.copy().set(updater))
+    cls.ones = classmethod(ones.copy().set(updater))
+    cls.full = classmethod(full.copy().set(updater))
 
     return cls
 
 
-# helper functions
-def __new__(
+@updatable_doc
+def new(
     cls: type,
     data: Any,
     name: Optional[Name] = None,
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """\
-    Create a custom DataArray from data and coordinates.
+    """Create a custom DataArray from data and coordinates.
 
-    {summary}
+    {cls.doc}
 
     Args:
-        data: Values of the DataArray. Its shape must be consistent with
-            ``dims``. It is casted to ``dtype`` if it is defined as a
-            class attribute (an error is raised if it cannot be casted).
-        name: Name of the DataArray.
-        attrs: Attributes of the DataArray. Default is an empty dict.
+        data: Values of the DataArray. Its shape must match class ``dims``.
+            If class ``dtype`` is defined, it will be casted to that type.
+            If it cannot be casted, a ``ValueError`` will be raised.
+        name: Name of the DataArray. Default is class ``name``.
+        attrs: Attributes of the DataArray. Default is class ``attrs``.
         **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
-        dataarray: Custom DataArray.
+        Custom DataArray.
 
-    Keyword Args:
-    {coords_doc}
-
-    See Also:
-        - **zeros:** Create a custom DataArray filled with zeros.
-        - **empty:** Create a custom DataArray filled with uninitialized values.
-        - **ones:** Create a custom DataArray filled with ones.
-        - **full:** Create a custom DataArray filled with ``fill_value``.
+    {cls.coords.doc}
 
     """
     dataarray = DataArray(data, dims=cls.dims, name=name, attrs=attrs)
@@ -83,95 +71,26 @@ def __new__(
     if cls.dtype is not None:
         dataarray = dataarray.astype(cls.dtype)
 
-    for name, ctype in cls.ctypes.items():
-        shape = [dataarray.sizes[dim] for dim in ctype.dims]
+    for name, coord in cls.coords.items():
+        shape = [dataarray.sizes[dim] for dim in coord.dims]
 
         if name in coords:
-            dataarray.coords[name] = ctype.full(shape, coords[name])
+            dataarray.coords[name] = coord.full(shape, coords[name])
             continue
 
         if hasattr(cls, name):
-            dataarray.coords[name] = ctype.full(shape, getattr(cls, name))
+            dataarray.coords[name] = coord.full(shape, getattr(cls, name))
             continue
 
         raise ValueError(
-            f"No default value for a coordinate {repr(name)}. "
-            "The value must be given as a keyword argument."
+            f"Default value for a coordinate {name} is not defined. "
+            f"It must be given as a keyword argument ({name}=<value>)."
         )
 
     return dataarray
 
 
-def zeros(
-    cls: type,
-    shape: Shape,
-    dtype: Optional[Dtype] = None,
-    order: str = ORDER,
-    name: Optional[Name] = None,
-    attrs: Optional[Attrs] = None,
-    **coords,
-) -> DataArray:
-    """\
-    Create a custom DataArray filled with zeros.
-
-    {summary}
-
-    Args:
-        shape: Shape of the DataArray. The length of it must match
-            that of ``dims`` defined by the class.
-        dtype: Datatype of the DataArray. Default is 64-bit float.
-            It is ignored if ``dtype`` is defined as a class attribute.
-        order: Order of data in memory. Either ``'C'`` (row-major; C-style)
-            or ``'F'`` (column-major; Fortran-style) is accepted.
-        name: Name of the DataArray.
-        attrs: Attributes of the DataArray. Default is an empty dict.
-        **coords: Coordinates of the DataArray defined by the class.
-
-    Returns:
-        dataarray: Custom DataArray filled with zeros.
-
-    Keyword Args:
-    {coords_doc}
-
-    """
-    return cls(np.zeros(shape, dtype, order), name, attrs, **coords)
-
-
-def ones(
-    cls: type,
-    shape: Shape,
-    dtype: Optional[Dtype] = None,
-    order: str = ORDER,
-    name: Optional[Name] = None,
-    attrs: Optional[Attrs] = None,
-    **coords,
-) -> DataArray:
-    """\
-    Create a custom DataArray filled with ones.
-
-    {summary}
-
-    Args:
-        shape: Shape of the DataArray. The length of it must match
-            that of ``dims`` defined by the class.
-        dtype: Datatype of the DataArray. Default is 64-bit float.
-            It is ignored if ``dtype`` is defined as a class attribute.
-        order: Order of data in memory. Either ``'C'`` (row-major; C-style)
-            or ``'F'`` (column-major; Fortran-style) is accepted.
-        name: Name of the DataArray.
-        attrs: Attributes of the DataArray. Default is an empty dict.
-        **coords: Coordinates of the DataArray defined by the class.
-
-    Returns:
-        dataarray: Custom DataArray filled with ones.
-
-    Keyword Args:
-    {coords_doc}
-
-    """
-    return cls(np.ones(shape, dtype, order), name, attrs, **coords)
-
-
+@updatable_doc
 def empty(
     cls: type,
     shape: Shape,
@@ -181,32 +100,96 @@ def empty(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """\
-    Create a custom DataArray filled with uninitialized values.
+    """Create a custom DataArray filled with uninitialized values.
 
-    {summary}
+    {cls.doc}
 
     Args:
-        shape: Shape of the DataArray. The length of it must match
-            that of ``dims`` defined by the class.
+        shape: Shape of the DataArray. It must match class ``dims``.
         dtype: Datatype of the DataArray. Default is 64-bit float.
-            It is ignored if ``dtype`` is defined as a class attribute.
+            It is ignored if class ``dtype`` is defined.
         order: Order of data in memory. Either ``'C'`` (row-major; C-style)
             or ``'F'`` (column-major; Fortran-style) is accepted.
-        name: Name of the DataArray.
-        attrs: Attributes of the DataArray. Default is an empty dict.
+        name: Name of the DataArray. Default is class ``name``.
+        attrs: Attributes of the DataArray. Default is class ``attrs``.
         **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
-        dataarray: Custom DataArray filled with uninitialized values.
+        Custom DataArray filled with uninitialized values.
 
-    Keyword Args:
-    {coords_doc}
+    {cls.coords.doc}
 
     """
     return cls(np.empty(shape, dtype, order), name, attrs, **coords)
 
 
+@updatable_doc
+def zeros(
+    cls: type,
+    shape: Shape,
+    dtype: Optional[Dtype] = None,
+    order: str = ORDER,
+    name: Optional[Name] = None,
+    attrs: Optional[Attrs] = None,
+    **coords,
+) -> DataArray:
+    """Create a custom DataArray filled with zeros.
+
+    {cls.doc}
+
+    Args:
+        shape: Shape of the DataArray. It must match class ``dims``.
+        dtype: Datatype of the DataArray. Default is 64-bit float.
+            It is ignored if class ``dtype`` is defined.
+        order: Order of data in memory. Either ``'C'`` (row-major; C-style)
+            or ``'F'`` (column-major; Fortran-style) is accepted.
+        name: Name of the DataArray. Default is class ``name``.
+        attrs: Attributes of the DataArray. Default is class ``attrs``.
+        **coords: Coordinates of the DataArray defined by the class.
+
+    Returns:
+        Custom DataArray filled with zeros.
+
+    {cls.coords.doc}
+
+    """
+    return cls(np.zeros(shape, dtype, order), name, attrs, **coords)
+
+
+@updatable_doc
+def ones(
+    cls: type,
+    shape: Shape,
+    dtype: Optional[Dtype] = None,
+    order: str = ORDER,
+    name: Optional[Name] = None,
+    attrs: Optional[Attrs] = None,
+    **coords,
+) -> DataArray:
+    """Create a custom DataArray filled with ones.
+
+    {cls.doc}
+
+    Args:
+        shape: Shape of the DataArray. It must match class ``dims``.
+        dtype: Datatype of the DataArray. Default is 64-bit float.
+            It is ignored if class ``dtype`` is defined.
+        order: Order of data in memory. Either ``'C'`` (row-major; C-style)
+            or ``'F'`` (column-major; Fortran-style) is accepted.
+        name: Name of the DataArray. Default is class ``name``.
+        attrs: Attributes of the DataArray. Default is class ``attrs``.
+        **coords: Coordinates of the DataArray defined by the class.
+
+    Returns:
+        Custom DataArray filled with ones.
+
+    {cls.coords.doc}
+
+    """
+    return cls(np.ones(shape, dtype, order), name, attrs, **coords)
+
+
+@updatable_doc
 def full(
     cls: type,
     shape: Shape,
@@ -217,28 +200,25 @@ def full(
     attrs: Optional[Attrs] = None,
     **coords,
 ) -> DataArray:
-    """\
-    Create a custom DataArray filled with ``fill_value``.
+    """Create a custom DataArray filled with ``fill_value``.
 
-    {summary}
+    {cls.doc}
 
     Args:
-        shape: Shape of the DataArray. The length of it must match
-            that of ``dims`` defined by the class.
-        fill_value: Scalar value to fill a custom DataArray.
-        dtype: Datatype of the DataArray. Default follows ``fill_value``.
-            It is ignored if ``dtype`` is defined as a class attribute.
+        shape: Shape of the DataArray. It must match class ``dims``.
+        fill_value: Scalar value to fill the custom DataArray.
+        dtype: Datatype of the DataArray. Default is 64-bit float.
+            It is ignored if class ``dtype`` is defined.
         order: Order of data in memory. Either ``'C'`` (row-major; C-style)
             or ``'F'`` (column-major; Fortran-style) is accepted.
-        name: Name of the DataArray.
-        attrs: Attributes of the DataArray. Default is an empty dict.
+        name: Name of the DataArray. Default is class ``name``.
+        attrs: Attributes of the DataArray. Default is class ``attrs``.
         **coords: Coordinates of the DataArray defined by the class.
 
     Returns:
-        dataarray: Custom DataArray filled with ``fill_value``.
+        Custom DataArray filled with ``fill_value``.
 
-    Keyword Args:
-    {coords_doc}
+    {cls.coords.doc}
 
     """
     return cls(np.full(shape, fill_value, dtype, order), name, attrs, **coords)

@@ -1,7 +1,9 @@
 """Module for utilities which help to create custom DataArray classes.
 
-Currently this module provides only ``include`` class decorator
+Currently this module only provides ``include`` class decorator
 which can include a custom DataArray definition written in a file.
+
+- include: Class decorator to include a custom DataArray definition in a file.
 
 """
 __all__ = ["include"]
@@ -17,12 +19,16 @@ from typing import Any, Callable, Dict, Union
 # dependencies
 import toml
 import yaml
-from .dataclasses import ctype
-from .ensuring import ensure_ctypes
+from .dataclasses import coord
 
 
 # constants
-ATTRS = "desc", "dims", "dtype"
+ATTRS = (
+    "accessor",
+    "desc",
+    "dims",
+    "dtype",
+)
 COORDS = "coords"
 DEFAULT = "default"
 JSON_RE = r"\.json$"
@@ -52,7 +58,7 @@ def include(path: Union[Path, str]) -> Callable:
         path: Path or filename of the file.
 
     Returns:
-        decorator: Decorator to include the definition.
+        Decorator to include the definition.
 
     Examples:
         If a definition is written in ``dataarray.toml``::
@@ -88,16 +94,14 @@ def include(path: Union[Path, str]) -> Callable:
 
                 dims = 'x', 'y'
                 dtype = float
-                x: ctype('x', int) = 0
-                y: ctype('y', int) = 0
+                x: coord('x', int) = 0
+                y: coord('y', int) = 0
 
     """
     path = Path(path).expanduser()
     loader = choose_loader_from(path)
 
     def decorator(cls: type) -> type:
-        cls = ensure_ctypes(cls)
-
         config = loader(path)
         coords = config.get(COORDS, {})
 
@@ -105,11 +109,11 @@ def include(path: Union[Path, str]) -> Callable:
             if name in config:
                 setattr(cls, name, config[name])
 
-        for name, coord in coords.items():
-            cls.ctypes[name] = ctype(**coord)
+        for name, values in coords.items():
+            cls.__annotations__[name] = coord(**values)
 
-            if DEFAULT in coord:
-                setattr(cls, name, coord[DEFAULT])
+            if DEFAULT in values:
+                setattr(cls, name, values[DEFAULT])
 
         return cls
 
