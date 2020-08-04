@@ -81,14 +81,14 @@ def include(path: Union[Path, str]) -> Callable:
 
         then the following two class definitions are equivalent::
 
-            @dataarrayclass(accessor='img')
             @include('dataarray.toml')
+            @dataarrayclass
             class Image:
                 pass
 
         ::
 
-            @dataarrayclass(accessor='img')
+            @dataarrayclass
             class Image:
                 \"\"\"DataArray class to represent images.\"\"\"
 
