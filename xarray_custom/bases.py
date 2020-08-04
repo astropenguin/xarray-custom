@@ -41,6 +41,9 @@ class DataArrayClassMeta(type):
                 setattr(meta, key, obj)
                 namespace.pop(key)
 
+        if isinstance(namespace.get("dims"), str):
+            namespace["dims"] = (namespace["dims"],)
+
         if namespace.get("__doc__") and not namespace.get("desc"):
             namespace["desc"] = namespace["__doc__"]
 
