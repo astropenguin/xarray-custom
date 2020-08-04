@@ -1,104 +1,159 @@
-__all__ = ["DataArrayClass"]
+"""Module for providing the base class of DataArray classes."""
+__all__ = ["DataArrayClassBase"]
 
 
 # standard library
-from functools import wraps
+from re import sub
 from itertools import chain
-from typing import Callable, Dict, List, Optional, Union
-from typing import get_type_hints
+from typing import get_type_hints, List, Optional
+from textwrap import TextWrapper
 
 
 # dependencies
-from .docstring import update_doc
-from .special import empty, zeros, ones, full, new
-from .typing import Attrs, Dims, Dtype, Name
+from .typing import Dims, Dtype
+from .accessor import add_accessors
+from .special import add_classmethods
 
 
-# helper classes
+# constants
+DOC_WIDTH: int = 78
+DOC_INDENT: str = " " * 4
+
+
 class classproperty(property):
+    """Decorator to convert a function as a class property."""
+
     pass
 
 
 class DataArrayClassMeta(type):
-    def __new__(meta, name, bases, namespace):
-        for key, obj in namespace.copy().items():
-            if isinstance(obj, classmethod):
-                setattr(meta, key, obj.__func__)
-                namespace.pop(key)
+    """Metaclass only for the ``DataArrayClassBase`` class."""
 
+    def __new__(meta, name: str, bases: tuple, namespace: dict) -> type:
+        """Create a DataArray class as an instance of the metaclass.
+
+        This method (1) convert instance methods to class properties
+        and (2) use the class ``__doc__`` as the ``desc`` attribute.
+
+        """
+        for key, obj in namespace.copy().items():
             if isinstance(obj, classproperty):
                 setattr(meta, key, obj)
                 namespace.pop(key)
 
+        if namespace.get("__doc__") and not namespace.get("desc"):
+            namespace["desc"] = namespace["__doc__"]
+
         return super().__new__(meta, name, bases, namespace)
 
+    def __init__(cls, name: str, bases: tuple, namespace: dict) -> None:
+        """Initialize a DataArray class with class-specific customization.
+
+        This method (1) adds special class methods (e.g., ``__new__``, ``ones``)
+        with a docstring updater and (2) adds unique and common accessors.
+
+        """
+
+        def updater(doc):
+            return doc.format(cls=cls)
+
+        add_classmethods(cls, updater)
+        add_accessors(cls, cls.accessor)
+
+    def __repr__(cls) -> str:
+        """Customizable repr feature of a DataArray class.
+
+        If a DataArray class has a ``__class_repr__`` classmethod,
+        the default class ``__repr__`` behavior is overridden by it.
+
+        """
+        try:
+            return cls.__class_repr__()
+        except AttributeError:
+            return super().__repr__()
+
     def __dir__(cls) -> List[str]:
+        """List names in the namespace of a DataArray class."""
         dirs = super().__dir__(), dir(type(cls))
         return list(set(chain.from_iterable(dirs)))
 
 
-# main classes
-class DataArrayClass(metaclass=DataArrayClassMeta):
-    # class attributes for DataArray
-    attrs: Optional[Attrs] = None
+class DataArrayClassBase(metaclass=DataArrayClassMeta):
+    """Base class for DataArray classes."""
+
+    desc: str = "No description."
     dims: Optional[Dims] = None
     dtype: Optional[Dtype] = None
-    name: Optional[Name] = None
-    desc: Optional[str] = None
     accessor: Optional[str] = None
 
-    @wraps(new)
-    def __new__(cls, *args, **kwargs):
-        return new(cls, *args, **kwargs)
+    @classproperty
+    def doc(cls) -> "Doc":
+        return Doc.from_dataarrayclass(cls)
 
     @classproperty
-    def new(cls) -> Callable:
-        return update_doc(new, cls).__get__(cls)
-
-    @classproperty
-    def empty(cls) -> Callable:
-        return update_doc(empty, cls).__get__(cls)
-
-    @classproperty
-    def zeros(cls) -> Callable:
-        return update_doc(zeros, cls).__get__(cls)
-
-    @classproperty
-    def ones(cls) -> Callable:
-        return update_doc(ones, cls).__get__(cls)
-
-    @classproperty
-    def full(cls) -> Callable:
-        return update_doc(full, cls).__get__(cls)
-
-    @classproperty
-    def data(cls) -> Dict[str, Union[Dims, Dtype]]:
-        """Properties of multi-dimensional data."""
-        return dict(dims=cls.dims, dtype=cls.dtype)
-
-    @classproperty
-    def coords(cls) -> Dict[str, type]:
-        """Properties of coordinates of data."""
-        coords = {}
-
-        for name, hint in get_type_hints(cls).items():
-            if not isinstance(hint, type):
-                continue
-
-            if issubclass(hint, DataArrayClass):
-                coords[name] = hint
-
-        return coords
+    def coords(cls) -> "Coords":
+        """Dictionary of coordinate definitions."""
+        return Coords.from_dataarrayclass(cls)
 
     @classproperty
     def __doc__(cls) -> str:
         """Updatable class docstring."""
-        return update_doc(new, cls).__doc__
+        return cls.__new__.__doc__
+
+
+class Coords(dict):
+    """Class for the coordinate definitions of a DataArray class."""
+
+    wrapper = TextWrapper(DOC_WIDTH, DOC_INDENT, DOC_INDENT * 2)
 
     @classmethod
-    def __repr__(cls) -> str:
-        """Updatable class repr string."""
-        dims = str(cls.dims).replace("'", "")
-        dtype = str(cls.dtype).replace("'", "")
+    def from_dataarrayclass(cls, dataarrayclass: type) -> "Coords":
+        """Create a Coords instance from a DataArray class."""
+        coords = {}
 
-        return f"{cls.__name__}(dims={dims}, dtype={dtype})"
+        for name, hint in get_type_hints(dataarrayclass).items():
+            if not isinstance(hint, type):
+                continue
+
+            if issubclass(hint, DataArrayClassBase):
+                coords[name] = hint
+
+        return cls(coords)
+
+    @property
+    def doc(self) -> str:
+        """Create the Google-style docstring of an instance."""
+        if not self:
+            return ""
+
+        docs = ["Keyword Args:"]
+
+        for name, coord in self.items():
+            doc = f"{name}: {coord.doc.unwrap}"
+            docs.append("\n".join(self.wrapper.wrap(doc)))
+
+        return "\n".join(docs)
+
+
+class Doc(str):
+    """Class for the docstring of a DataArray class."""
+
+    wrapper = TextWrapper(DOC_WIDTH - len(DOC_INDENT), "", "")
+
+    def __new__(cls, doc: str) -> "Doc":
+        """Create an instance from a docstring."""
+        return super().__new__(cls, "\n".join(cls.wrapper.wrap(doc)))
+
+    @classmethod
+    def from_dataarrayclass(cls, dataarrayclass: type) -> "Doc":
+        """Create an Doc instace from a DataArray class."""
+        desc = sub(r"[\n|\s]+", " ", dataarrayclass.desc)
+        dims = f"dims={dataarrayclass.dims!r}"
+        dtype = f"dims={dataarrayclass.dtype!r}"
+
+        return cls(f"({dims}, {dtype}) {desc}")
+
+    @property
+    def unwrap(self):
+        """Convert an instance to an unwrap docstring."""
+        return sub(r"[\n|\s]+", " ", self)
