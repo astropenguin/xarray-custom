@@ -67,7 +67,7 @@ class CommonAccessorBase:
     def __getattr__(self, name: str) -> Any:
         """Get a method or an attribute of the DataArray class."""
         for dataarrayclass in self._dataarrayclasses[self._name]:
-            bound = dataarrayclass.bind(self._dataarray)
+            bound = dataarrayclass._accessor(self._dataarray)
 
             if hasattr(bound, name):
                 return getattr(bound, name)
