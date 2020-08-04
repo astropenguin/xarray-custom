@@ -1,6 +1,6 @@
 # dependencies
 import numpy as np
-from xarray_custom import ctype, dataarrayclass
+from xarray_custom import coord, dataarrayclass
 
 
 # constants
@@ -9,12 +9,13 @@ DTYPE = float
 DATA = np.array([[0, 1], [2, 3]], DTYPE)
 
 
-@dataarrayclass(accessor="img")
+@dataarrayclass
 class Image:
     dims = DIMS
     dtype = DTYPE
-    x: ctype(DIMS[0], int) = 0
-    y: ctype(DIMS[1], int) = 0
+    accessor = "img"
+    x: coord(DIMS[0], int) = 0
+    y: coord(DIMS[1], int) = 0
 
     def normalize(self):
         return self / self.max()
@@ -46,9 +47,9 @@ def test_special_methods():
 
 
 def test_inheritance():
-    @dataarrayclass(accessor="wimg")
     class WeightedImage(Image):
-        w: ctype(DIMS, float) = 1.0
+        accessor = "wimg"
+        w: coord(DIMS, float) = 1.0
 
     image = WeightedImage(DATA)
     print(vars(WeightedImage))
