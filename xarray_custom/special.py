@@ -62,6 +62,8 @@ def new(
 ) -> DataArray:
     """Create a custom DataArray from data and coordinates.
 
+    {cls.doc}
+
     Args:
         data: Values of the DataArray. Its shape must match class ``dims``.
             If class ``dtype`` is defined, it will be casted to that type.
@@ -112,6 +114,8 @@ def empty(
 ) -> DataArray:
     """Create a custom DataArray filled with uninitialized values.
 
+    {cls.doc}
+
     Args:
         shape: Shape of the DataArray. It must match class ``dims``.
         dtype: Datatype of the DataArray. Default is 64-bit float.
@@ -142,6 +146,8 @@ def zeros(
     **coords,
 ) -> DataArray:
     """Create a custom DataArray filled with zeros.
+
+    {cls.doc}
 
     Args:
         shape: Shape of the DataArray. It must match class ``dims``.
@@ -174,6 +180,8 @@ def ones(
 ) -> DataArray:
     """Create a custom DataArray filled with ones.
 
+    {cls.doc}
+
     Args:
         shape: Shape of the DataArray. It must match class ``dims``.
         dtype: Datatype of the DataArray. Default is 64-bit float.
@@ -205,6 +213,8 @@ def full(
     **coords,
 ) -> DataArray:
     """Create a custom DataArray filled with ``fill_value``.
+
+    {cls.doc}
 
     Args:
         shape: Shape of the DataArray. It must match class ``dims``.
