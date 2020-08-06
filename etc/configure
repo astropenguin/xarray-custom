@@ -22,14 +22,14 @@ mkdir -p .vscode
 
 cat << EOS > .vscode/settings.json
 {
-    "python.pythonPath": "$(poetry run which python)",
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
     "editor.formatOnSave": true,
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
     "python.formatting.provider": "black",
     "python.linting.enabled": true,
     "python.linting.lintOnSave": true,
     "python.linting.flake8Enabled": true,
     "python.linting.pylintEnabled": false,
+    "python.pythonPath": "$(poetry run which python)",
 }
 EOS
